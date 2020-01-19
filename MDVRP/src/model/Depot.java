@@ -5,8 +5,8 @@ public class Depot{
     int maxDuration;
     int maxLoad;
 
-    int xCoordinate;
-    int yCoordinate;
+    public int xCoordinate;
+    public int yCoordinate;
 
     public Depot (int maxDuration, int maxLoad){
         this.maxDuration = maxDuration;
