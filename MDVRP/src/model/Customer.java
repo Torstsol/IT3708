@@ -17,7 +17,6 @@ public class Customer{
     }
 
     public String toString(){
-        System.out.println("test");
-        return "customerID: " + this.customerID + " Position: " + this.xCoordinate + "." + this.yCoordinate;
+        return "customerID: " + this.customerID; // + " Position: " + this.xCoordinate + "." + this.yCoordinate;
     }
 }

@@ -57,8 +57,22 @@ public class IOManager{
                     depotID = i;
                 }
             }
-            System.out.println("CustomerNumber: " + customer.customerID + " Assigned Depot: " + depotID + " Shortest Euclidian distance: " + lowestDistance);
+            depots.get(depotID).addCustomer(customer);
+            // System.out.println("CustomerNumber: " + customer.customerID + " Assigned Depot: " + depotID + " Shortest Euclidian distance: " + lowestDistance);
         }
+    }
+
+    public ArrayList<ArrayList<Integer>> generateDepotCustomerIntegerList(ArrayList<Depot> depotList){
+        ArrayList<ArrayList<Integer>> list = new  ArrayList<ArrayList<Integer>>();
+        
+        for(Depot depot: depotList){
+            list.add(new ArrayList<Integer>());
+            for (Customer customer: depot.getCustomers()){
+                list.get(list.size()-1).add(customer.customerID);
+            }
+        }
+        return list;
+
     }
 
     public double euclidianDistance(int x1, int y1, int x2, int y2){

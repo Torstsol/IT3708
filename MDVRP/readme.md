@@ -1,12 +1,12 @@
 Check Lese inn data fra fil
 Check Generere objekter
 
-Nja Designe kromosom
+Check Designe kromosom
 -Sett av depoter
 -Hvert depot har et ordnet sett av unike kunde-id
 
-Tildele depoter kunder
-- lage kandidatListe
+Check Tildele depoter kunder
+Venter - lage kandidatListe
 Seede populasjon
 
 Lage RouteScheduler
