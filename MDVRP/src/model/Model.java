@@ -32,4 +32,12 @@ public class Model {
     public void addChromosomeToPopulation(ArrayList<ArrayList<Integer>> pseudoChromosome){
         this.population.add(pseudoChromosome);
     }
+
+    public ArrayList<ArrayList<Integer>> getPseudoChromosome(){
+        return this.pseudoChromosome;
+    }
+
+    public void addPopulation(ArrayList<ArrayList<ArrayList<Integer>>> population){
+        this.population = population;
+    }
 }
