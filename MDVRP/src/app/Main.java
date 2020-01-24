@@ -1,6 +1,7 @@
 package app;
 
 import utils.IOManager;
+import utils.RouteScheduler;
 import model.Model;
 import algorithm.Algorithm;
 
@@ -16,6 +17,8 @@ public class Main {
         IOManager manager = new IOManager();
         Model model = new Model();
         Algorithm algorithm = new Algorithm();
+        RouteScheduler scheduler = new RouteScheduler();
+
         manager.parseFile(model);
 
         // Assign customers to depots based on shortest euclidian distance
@@ -26,5 +29,9 @@ public class Main {
 
         //seed population based on seudochromosome
         model.addPopulation(algorithm.seedPopulation(model.getPseudoChromosome(), populationSize));
+        
+        //generate solutions from population
+        scheduler.generatePopulationRoutes(model.getPopulation(), model);
+
     }
 }

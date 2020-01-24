@@ -40,4 +40,8 @@ public class Model {
     public void addPopulation(ArrayList<ArrayList<ArrayList<Integer>>> population){
         this.population = population;
     }
+
+    public ArrayList<ArrayList<ArrayList<Integer>>> getPopulation(){
+        return this.population;
+    }
 }

@@ -17,11 +17,12 @@ public class IOManager{
 
         //Scan the first line of the input file to obtain the number of vehicles, customers and depots
         String[] list = scan.nextLine().split(" ");
-        model.setVehicles(Integer.parseInt(list[0]));
+        int vehicles = Integer.parseInt(list[0]);
+        model.setVehicles(vehicles);
 
         for(int i=0; i<Integer.parseInt(list[2]); i++){  
             //initialize depot_capacity
-            model.addDepot(new Depot(scan.nextInt(), scan.nextInt()));
+            model.addDepot(new Depot(scan.nextInt(), scan.nextInt(), vehicles));
         }
         for(int i=0; i<Integer.parseInt(list[1]); i++){  
             //initialize customers
@@ -75,7 +76,7 @@ public class IOManager{
 
     }
 
-    public double euclidianDistance(int x1, int y1, int x2, int y2){
+    public static double euclidianDistance(int x1, int y1, int x2, int y2){
         double deltaX = x1 - x2;
         double deltaY = y1 - y2;
         double result = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
