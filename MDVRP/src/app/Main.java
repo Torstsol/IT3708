@@ -31,7 +31,7 @@ public class Main {
         model.addPopulation(algorithm.seedPopulation(model.getPseudoChromosome(), populationSize));
         
         //generate solutions from population
-        scheduler.generatePopulationRoutes(model.getPopulation(), model);
+        manager.generateAnswerFile(scheduler.generatePopulationRoutes(model.getPopulation(), model).get(0));
 
     }
 }

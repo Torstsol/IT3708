@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import model.Model;
 import model.Depot;
 import model.Customer;
+import model.Route;
 
 public class IOManager{
 
@@ -83,4 +86,45 @@ public class IOManager{
         return result; 
     }
 
+    public void generateAnswerFile(ArrayList<ArrayList<Route>> answer){
+
+        double solution = 100.0;
+
+        File file = new File("solutions/solution.txt");
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(file);
+
+            fr.write(solution+"\n");
+
+            for (int i=0; i<answer.size(); i++){
+                int depot = i+1;
+                for (int j=0; j<answer.get(i).size(); j++){
+                    int vehicle = j+1;
+
+                    int routeLoad = answer.get(i).get(j).getLoad();
+                    double distance = answer.get(i).get(j).getDistance();
+                    double roundOffDistance = (double) Math.round(distance * 100) / 100;
+
+                    fr.write(depot+"\t"+vehicle+"\t"+roundOffDistance+"\t"+routeLoad);
+
+                    fr.write("\t"+0);
+
+                    for(Customer customer: answer.get(i).get(j).geCustomers()){
+                        fr.write(" "+customer.customerID);
+                    }
+                    fr.write(" "+0+"\n");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            //close resources
+            try {
+                fr.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

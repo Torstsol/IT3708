@@ -9,9 +9,15 @@ Check Tildele depoter kunder
 Venter - lage kandidatListe
 Seede populasjon
 
-Lage RouteScheduler
+Check Lage RouteScheduler
 
-Generere svarfil
+Check Generere svarfil
+
+Visualisere ruter
+-XY-plot seems to be good
+Evaluere ruter
+
+Fikse bugs
 
 
 ##
@@ -24,3 +30,7 @@ We design a dynamic inter-depot mutation operator which may re-assign bor-
 derline customers during the evolution process to the final depot placement.
 
 Euclidian distance
+
+Eventuelle problemer:
+- Har ikke tatt høyde for antall kjøretøy i routescheduleren
+- Har ikke lagt til costen å dra tilbake til depotet i distance-akkumulatoren

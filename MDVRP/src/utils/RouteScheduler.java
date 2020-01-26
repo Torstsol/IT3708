@@ -6,34 +6,37 @@ import model.Depot;
 import model.Customer;
 import model.Model;
 
-public class RouteScheduler{
+public class RouteScheduler {
 
-    public ArrayList<ArrayList<Route>> generatePopulationRoutes(ArrayList<ArrayList<ArrayList<Integer>>> population, Model model){
+    public ArrayList<ArrayList<ArrayList<Route>>> generatePopulationRoutes(ArrayList<ArrayList<ArrayList<Integer>>> population,
+            Model model) {
 
-        ArrayList<ArrayList<Route>> solutionList = new ArrayList<ArrayList<Route>>();
+        ArrayList<ArrayList<ArrayList<Route>>> solutionList = new ArrayList<ArrayList<ArrayList<Route>>>();
 
-        //For each chromosome in population
-        for(int i=0; i<population.size(); i++){
-            //get each depot pr. chromosome
+        // For each chromosome in population
+        for (int i = 0; i < population.size(); i++) {
+            ArrayList<ArrayList<Route>> solution = new ArrayList<ArrayList<Route>>();
 
-            for(int j=0; j<population.get(i).size(); j++){
+            // get each depot pr. chromosome
+            for (int j = 0; j < population.get(i).size(); j++) {
                 Depot depot = model.depotList.get(j);
-                //Iterate through each customer pr. depot
+                // Iterate through each customer pr. depot
                 ArrayList<Customer> customers = new ArrayList<Customer>();
 
-                for (int k=0; k<population.get(i).get(j).size(); k++){
-                    customers.add(model.customerList.get(population.get(i).get(j).get(k).intValue()-1));
+                for (int k = 0; k < population.get(i).get(j).size(); k++) {
+                    customers.add(model.customerList.get(population.get(i).get(j).get(k).intValue() - 1));
                 }
-                // System.out.println(customers);
-                solutionList.add(generateDepotRoutes(depot, customers));
+                solution.add(generateDepotRoutes(depot, customers));
             }
+            solutionList.add(solution);
+
         }
 
         return solutionList;
 
     }
 
-    public ArrayList<Route> generateDepotRoutes(Depot depot, ArrayList<Customer> customers){
+    public ArrayList<Route> generateDepotRoutes(Depot depot, ArrayList<Customer> customers) {
 
         int depotX = depot.xCoordinate;
         int depotY = depot.yCoordinate;
@@ -42,48 +45,45 @@ public class RouteScheduler{
         int maxDuration = depot.getMaxDuration();
         int maxLoad = depot.getMaxLoad();
 
-        System.out.println(maxDuration);
-
         ArrayList<Route> routes = new ArrayList<Route>();
-        
-        //instantiate the first route outside the loop
+
+        // instantiate the first route outside the loop
         Route route = new Route(depot);
+        routes.add(route);
 
         // phase 1
-        for(Customer customer: customers){
-            if(routes.size() == 0){
+        for (Customer customer : customers) {
+            double subDistance = 0;
+            if (route.getLoad() + customer.demand <= maxLoad) {
+                if (route.geCustomers().size() != 0) {
+                    subDistance = IOManager.euclidianDistance(
+                            route.geCustomers().get(route.geCustomers().size() - 1).xCoordinate,
+                            route.geCustomers().get(route.geCustomers().size() - 1).yCoordinate, customer.xCoordinate,
+                            customer.yCoordinate);
+                }
+                double depotDistance = IOManager.euclidianDistance(depotX, depotY, customer.xCoordinate,
+                        customer.yCoordinate);
+                if (route.getDistance() + subDistance + depotDistance < maxDuration || maxDuration == 0) {
+                    route.addDistance(subDistance);
+                    route.addCustomer(customer);
+                    route.addLoad(customer.demand);
+                } else {
+                    // Max duration reached
+                    route = addFirstCustomerToNewRoute(depot, customer);
+                    routes.add(route);
+                }
+            } else {
+                // Max load reached
                 route = addFirstCustomerToNewRoute(depot, customer);
                 routes.add(route);
-            }
-            else{
-                if (route.getLoad() + customer.demand < maxLoad){
-                    double subDistance = IOManager.euclidianDistance(route.geCustomers().get(route.geCustomers().size()-1).xCoordinate, route.geCustomers().get(route.geCustomers().size()-1).yCoordinate, customer.xCoordinate, customer.yCoordinate);
-                    double depotDistance = IOManager.euclidianDistance(depotX, depotY, customer.xCoordinate, customer.yCoordinate);
-                    if (route.getDistance() + subDistance + depotDistance < maxDuration || maxDuration == 0 ){
-                        route.addDistance(subDistance);
-                        route.addCustomer(customer);
-                        route.addLoad(customer.demand);
-                    }
-                    else{
-                        System.out.println("max duration reached");
-                        routes.add(route);
-                        route = addFirstCustomerToNewRoute(depot, customer);
-                    }
-                }
-                else{
-                    System.out.println("max load reached");
-                    routes.add(route);
-                    route = addFirstCustomerToNewRoute(depot, customer);
-                }
             }
 
         }
 
-        return null;
+        return routes;
     }
 
-
-    public Route addFirstCustomerToNewRoute(Depot depot, Customer customer){
+    public Route addFirstCustomerToNewRoute(Depot depot, Customer customer) {
         int depotX = depot.xCoordinate;
         int depotY = depot.yCoordinate;
 
