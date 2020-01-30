@@ -3,11 +3,14 @@ package algorithm;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import model.Individual;
+import model.Route;
+
 public class Algorithm {
 
-    public ArrayList<ArrayList<ArrayList<Integer>>> seedPopulation(ArrayList<ArrayList<Integer>> pseudoChromosome, int populationSize){
+    public ArrayList<Individual> seedPopulation(ArrayList<ArrayList<Integer>> pseudoChromosome, int populationSize){
 
-        ArrayList<ArrayList<ArrayList<Integer>>> population = new ArrayList<ArrayList<ArrayList<Integer>>>();
+        ArrayList<Individual> population = new ArrayList<Individual>();
 
         for(int i = 0; i < populationSize; i++){
             ArrayList<ArrayList<Integer>> chromosome = new ArrayList<ArrayList<Integer>>();
@@ -17,12 +20,20 @@ public class Algorithm {
                 Collections.shuffle(copy);
                 chromosome.add(copy);
             }
-            population.add(chromosome);
+            Individual individual = new Individual();
+            individual.addChromosome(chromosome);
+            population.add(individual);
         }
         return population;
     }
 
-    public double getBestFitness(){
-        return 100.0;
+    public void evaluateFitness(ArrayList<Individual> population){
+        
+        for(Individual individual: population){
+            for(ArrayList<Route> phenotype: individual.getPhenotype()){
+
+            }
+        }
+
     }
 }

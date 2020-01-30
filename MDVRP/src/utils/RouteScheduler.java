@@ -3,13 +3,13 @@ package utils;
 import java.util.ArrayList;
 import model.Route;
 import model.Depot;
+import model.Individual;
 import model.Customer;
 import model.Model;
 
 public class RouteScheduler {
 
-    public ArrayList<ArrayList<ArrayList<Route>>> generatePopulationRoutes(ArrayList<ArrayList<ArrayList<Integer>>> population,
-            Model model) {
+    public void generatePopulationRoutes(ArrayList<Individual> population, Model model) {
 
         ArrayList<ArrayList<ArrayList<Route>>> solutionList = new ArrayList<ArrayList<ArrayList<Route>>>();
 
@@ -18,22 +18,19 @@ public class RouteScheduler {
             ArrayList<ArrayList<Route>> solution = new ArrayList<ArrayList<Route>>();
 
             // get each depot pr. chromosome
-            for (int j = 0; j < population.get(i).size(); j++) {
+            for (int j = 0; j < population.get(i).getChromosome().size(); j++) {
                 Depot depot = model.depotList.get(j);
                 // Iterate through each customer pr. depot
                 ArrayList<Customer> customers = new ArrayList<Customer>();
 
-                for (int k = 0; k < population.get(i).get(j).size(); k++) {
-                    customers.add(model.customerList.get(population.get(i).get(j).get(k).intValue() - 1));
+                for (int k = 0; k < population.get(i).getChromosome().get(j).size(); k++) {
+                    customers.add(model.customerList.get(population.get(i).getChromosome().get(j).get(k).intValue() - 1));
                 }
                 solution.add(generateDepotRoutes(depot, customers));
             }
-            solutionList.add(solution);
+            population.get(i).addPhenotype(solution);
 
         }
-
-        return solutionList;
-
     }
 
     public ArrayList<Route> generateDepotRoutes(Depot depot, ArrayList<Customer> customers) {

@@ -16,10 +16,9 @@ public class Model {
 
     //GA-related model
     ArrayList<ArrayList<Integer>> pseudoChromosome = new ArrayList<ArrayList<Integer>>();
-    ArrayList<ArrayList<ArrayList<Integer>>> population = new ArrayList<ArrayList<ArrayList<Integer>>>();
+    ArrayList<Individual> population = new ArrayList<Individual>();
 
     //Generated schedules
-    ArrayList<ArrayList<ArrayList<Route>>> populationSchedules = new ArrayList<ArrayList<ArrayList<Route>>>();
     ArrayList<ArrayList<Integer>> solution = new ArrayList<ArrayList<Integer>>();
 
     public void setVehicles(int vechicles){
@@ -37,27 +36,15 @@ public class Model {
         this.pseudoChromosome = pseudoChromosome;
     }
 
-    public void addChromosomeToPopulation(ArrayList<ArrayList<Integer>> pseudoChromosome){
-        this.population.add(pseudoChromosome);
-    }
-
     public ArrayList<ArrayList<Integer>> getPseudoChromosome(){
         return this.pseudoChromosome;
     }
 
-    public void addPopulation(ArrayList<ArrayList<ArrayList<Integer>>> population){
+    public void addPopulation(ArrayList<Individual> population){
         this.population = population;
     }
 
-    public ArrayList<ArrayList<ArrayList<Integer>>> getPopulation(){
+    public ArrayList<Individual> getPopulation(){
         return this.population;
-    }
-
-    public void addPopulationSchedules(ArrayList<ArrayList<ArrayList<Route>>> populationSchedules){
-        this.populationSchedules = populationSchedules;
-    }
-
-    public ArrayList<ArrayList<ArrayList<Route>>> getPopulationSchedules(){
-        return this.populationSchedules;
     }
 }

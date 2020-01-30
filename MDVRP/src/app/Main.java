@@ -13,7 +13,7 @@ public class Main {
 
         //Parameters
         int populationSize = 10;
-        String fileName = "/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p08";
+        String fileName = "/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p01";
 
         //Initialize the customers and depots from file
         IOManager manager = new IOManager();
@@ -32,14 +32,16 @@ public class Main {
         //seed population based on seudochromosome
         model.addPopulation(algorithm.seedPopulation(model.getPseudoChromosome(), populationSize));
 
-        //Generate schedules for each chromosome in population
-        model.addPopulationSchedules(scheduler.generatePopulationRoutes(model.getPopulation(), model));
+        //Generate schedules for each individual in population
+        scheduler.generatePopulationRoutes(model.getPopulation(), model);
+
         
-        //generate Answerfile from chromosome
-        manager.generateAnswerFile(model.getPopulationSchedules().get(0));
+        
+        //generate Answerfile from Individuals phenotype
+        manager.generateAnswerFile(model.getPopulation().get(0).getPhenotype());
 
         //visualize a solution
-        Visualizer visualizer = new Visualizer(model.depotList, model.customerList, model.maxCoordinate, model.minCoordinate, model.getPopulationSchedules().get(0));
+        Visualizer visualizer = new Visualizer(model.depotList, model.customerList, model.maxCoordinate, model.minCoordinate, model.getPopulation().get(0).getPhenotype());
 
     }
 }
