@@ -9,6 +9,10 @@ public class Model {
     public ArrayList<Depot> depotList = new ArrayList<Depot>();
     public ArrayList<Customer> customerList = new ArrayList<Customer>();
 
+    //For visualization
+    public double maxCoordinate = 0;
+    public double minCoordinate = 0;
+
 
     //GA-related model
     ArrayList<ArrayList<Integer>> pseudoChromosome = new ArrayList<ArrayList<Integer>>();

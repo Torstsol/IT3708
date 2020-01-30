@@ -14,39 +14,50 @@ import model.Route;
 
 public class IOManager{
 
-    public void parseFile(Model model) throws FileNotFoundException {
+    public void parseFile(Model model, String fileName) throws FileNotFoundException {
 
-        Scanner scan = new Scanner(new File("/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p01"));
+        double maxCoordinate = 0;
+        double minCoordinate = 0;
+
+
+        Scanner scan = new Scanner(new File(fileName));
 
         //Scan the first line of the input file to obtain the number of vehicles, customers and depots
         String[] list = scan.nextLine().split(" ");
         int vehicles = Integer.parseInt(list[0]);
         model.setVehicles(vehicles);
 
-        for(int i=0; i<Integer.parseInt(list[2]); i++){  
+        for(int i=0; i<Integer.parseInt(list[2]); i++){ 
+            
             //initialize depot_capacity
             model.addDepot(new Depot(scan.nextInt(), scan.nextInt(), vehicles));
         }
         for(int i=0; i<Integer.parseInt(list[1]); i++){  
             //initialize customers
-            model.addCustomer(new Customer(scan.nextInt(), scan.nextInt(), scan.nextInt(), scan.nextInt(), scan.nextInt()));
-            //should be replaced by some regex and scan.skip(Pattern pattern)
-            scan.nextInt();
-            scan.nextInt();
-            scan.nextInt();
-            scan.nextInt();
-            scan.nextInt();
-            scan.nextInt();
+            int customerID = scan.nextInt();
+            System.out.println(customerID);
+            int x = scan.nextInt();
+            int y = scan.nextInt();
+            model.addCustomer(new Customer(customerID, x, y, scan.nextInt(), scan.nextInt()));
+
+            maxCoordinate = Math.max(maxCoordinate, Math.max(x, y));
+            minCoordinate = Math.min(minCoordinate, Math.min(x, y));
+            scan.nextLine();
         }
         for(int i=0; i<Integer.parseInt(list[2]); i++){ 
             scan.nextInt(); 
-            model.depotList.get(i).setPosition(scan.nextInt(), scan.nextInt());
-            //should be replaced by some regex and scan.skip(Pattern pattern)
-            scan.nextInt();
-            scan.nextInt();
-            scan.nextInt();
-            scan.nextInt();
+            int x = scan.nextInt();
+            int y = scan.nextInt();
+            model.depotList.get(i).setPosition(x, y);
+
+            maxCoordinate = Math.max(maxCoordinate, Math.max(x, y));
+            minCoordinate = Math.min(minCoordinate, Math.min(x, y));
+            scan.nextLine();
         }
+
+        model.maxCoordinate = maxCoordinate;
+        model.minCoordinate = minCoordinate;
+
         scan.close();
     }
 

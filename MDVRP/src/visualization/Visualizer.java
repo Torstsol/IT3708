@@ -6,18 +6,21 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 
+import model.*;
+
 public class Visualizer extends JFrame {
 
     private MyCanvas canvas = new MyCanvas();
 
-
-    public Visualizer() {
+    public Visualizer(ArrayList<Depot> depotList, ArrayList<Customer> customerList, double maxCoordinate, double minCoordinate) {
         //canvas.customer_dict = customer_dict;
         //canvas.depot_dict = depot_dict;
         //canvas.vehicle_dict = vehicle_dict;
         //canvas.DNAString = DNAString;
-        //canvas.maxCoordinate = maxCoordinate;
-        //canvas.minCoordinate = minCoordinate;
+        canvas.maxCoordinate = maxCoordinate;
+        canvas.minCoordinate = minCoordinate;
+        canvas.depotList = depotList;
+        canvas.customerList = customerList;
         setLayout(new BorderLayout());
         setSize(720, 720);
         setTitle("Visualization");
@@ -36,8 +39,8 @@ public class Visualizer extends JFrame {
     //TODO Make dynamic
     private class MyCanvas extends Canvas {
 
-        //private Map<Integer, Depot> depot_dict;
-        //private Map<Integer, Customer> customer_dict;
+        ArrayList<Depot> depotList;
+        ArrayList<Customer> customerList;
         //private Map<Integer, Vehicle> vehicle_dict;
         private List<List<Integer>> DNAString;
         private double maxCoordinate;
@@ -73,11 +76,15 @@ public class Visualizer extends JFrame {
                     this.getHeight() - (y2 + (int)(-minCoordinate+border)) * this.getHeight() / (int)(maxCoordinate-minCoordinate+2*border));
         }
 
-      //   @Override
-      //   public void paint(Graphics g) {
-      //       for (Depot depot : depot_dict.values()) {
-      //           drawPoint(g, depot.getX(), depot.getY(), Color.gray, 13);
-      //       }
+        @Override
+        public void paint(Graphics g) {
+            for (Depot depot : depotList) {
+                drawPoint(g, depot.xCoordinate, depot.yCoordinate, Color.black, 10);
+            }
+            for (Customer customer : customerList) {
+                drawPoint(g, customer.xCoordinate, customer.yCoordinate, Color.red, 5);
+            }
+        }
       //       for (int i = 0; i < this.DNAString.size(); i++){
       //           Vehicle currentVehicle = vehicle_dict.get(i);
       //           List<Integer> currentRoute = this.DNAString.get(i);
@@ -110,7 +117,7 @@ public class Visualizer extends JFrame {
     }
 
     public static void main(String[] args){
-       Visualizer visualizer = new Visualizer();
+       //Visualizer visualizer = new Visualizer();
     }
 }
 

@@ -2,6 +2,7 @@ package app;
 
 import utils.IOManager;
 import utils.RouteScheduler;
+import visualization.Visualizer;
 import model.Model;
 import algorithm.Algorithm;
 
@@ -12,6 +13,7 @@ public class Main {
 
         //Parameters
         int populationSize = 10;
+        String fileName = "/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p01";
 
         //Initialize the customers and depots from file
         IOManager manager = new IOManager();
@@ -19,7 +21,7 @@ public class Main {
         Algorithm algorithm = new Algorithm();
         RouteScheduler scheduler = new RouteScheduler();
 
-        manager.parseFile(model);
+        manager.parseFile(model, fileName);
 
         // Assign customers to depots based on shortest euclidian distance
         manager.assignCustomersToDepots(model.depotList, model.customerList);
@@ -29,9 +31,14 @@ public class Main {
 
         //seed population based on seudochromosome
         model.addPopulation(algorithm.seedPopulation(model.getPseudoChromosome(), populationSize));
+
+
         
         //generate solutions from population
         manager.generateAnswerFile(scheduler.generatePopulationRoutes(model.getPopulation(), model).get(0));
+
+        //visualize a solution
+        Visualizer visualizer = new Visualizer(model.depotList, model.customerList, model.maxCoordinate, model.minCoordinate);
 
     }
 }
