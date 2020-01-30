@@ -13,8 +13,10 @@ Check Lage RouteScheduler
 
 Check Generere svarfil
 
-Visualisere ruter
+Check Visualisere ruter
 -XY-plot seems to be good
+
+
 Evaluere ruter
 
 Fikse bugs
@@ -34,3 +36,5 @@ Euclidian distance
 Eventuelle problemer:
 - Har ikke tatt høyde for antall kjøretøy i routescheduleren
 - Har ikke lagt til costen å dra tilbake til depotet i distance-akkumulatoren
+- Gi farger til rutene
+- det er noe hardkoda for duration elns i routescheduler tror jeg

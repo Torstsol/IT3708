@@ -12,11 +12,12 @@ public class Visualizer extends JFrame {
 
     private MyCanvas canvas = new MyCanvas();
 
-    public Visualizer(ArrayList<Depot> depotList, ArrayList<Customer> customerList, double maxCoordinate, double minCoordinate) {
-        //canvas.customer_dict = customer_dict;
-        //canvas.depot_dict = depot_dict;
-        //canvas.vehicle_dict = vehicle_dict;
-        //canvas.DNAString = DNAString;
+    public Visualizer(ArrayList<Depot> depotList, ArrayList<Customer> customerList, double maxCoordinate,
+            double minCoordinate, ArrayList<ArrayList<Route>> schedule) {
+        // canvas.customer_dict = customer_dict;
+        // canvas.depot_dict = depot_dict;
+        // canvas.vehicle_dict = vehicle_dict;
+        canvas.schedule = schedule;
         canvas.maxCoordinate = maxCoordinate;
         canvas.minCoordinate = minCoordinate;
         canvas.depotList = depotList;
@@ -32,26 +33,25 @@ public class Visualizer extends JFrame {
         setVisible(true);
     }
 
-    public void changeDNA(List<List<Integer>> DNAString){
-        canvas.setDNA(DNAString);
+    public void changeSchedule(ArrayList<ArrayList<Route>> schedule) {
+        canvas.setSchedule(schedule);
     }
 
-    //TODO Make dynamic
+    // TODO Make dynamic
     private class MyCanvas extends Canvas {
 
         ArrayList<Depot> depotList;
         ArrayList<Customer> customerList;
-        //private Map<Integer, Vehicle> vehicle_dict;
-        private List<List<Integer>> DNAString;
+        // private Map<Integer, Vehicle> vehicle_dict;
+        private ArrayList<ArrayList<Route>> schedule;
         private double maxCoordinate;
         private double minCoordinate;
         private double border = 5;
-        List<Color> depotColours = new ArrayList<Color>(Arrays.asList(
-                Color.blue, Color.red, Color.green, Color.black, Color.yellow, Color.pink, Color.cyan, Color.magenta, Color.orange, Color.lightGray));
+        List<Color> depotColours = new ArrayList<Color>(Arrays.asList(Color.blue, Color.red, Color.green, Color.black,
+                Color.yellow, Color.pink, Color.cyan, Color.magenta, Color.orange, Color.lightGray));
 
-
-        public void setDNA(List<List<Integer>> dna) {
-            this.DNAString = dna;
+        public void setSchedule(ArrayList<ArrayList<Route>> schedule) {
+            this.schedule = schedule;
         }
 
         private void drawPoint(Graphics g, int x, int y, Color color, int size) {
@@ -59,10 +59,12 @@ public class Visualizer extends JFrame {
 
             // transform from min-max point coordinates to screen coordinates
             // - size/2 to get the center of the point at the coordinate
-            g.fillOval((x + (int)(-minCoordinate+border)) * this.getWidth() / (int)(maxCoordinate-minCoordinate+2*border)-size/2,
-                    this.getHeight() - (y + (int)(-minCoordinate+border)) * this.getHeight() / (int)(maxCoordinate-minCoordinate+2*border) - size/2,
-                    size,
-                    size);
+            g.fillOval(
+                    (x + (int) (-minCoordinate + border)) * this.getWidth()
+                            / (int) (maxCoordinate - minCoordinate + 2 * border) - size / 2,
+                    this.getHeight() - (y + (int) (-minCoordinate + border)) * this.getHeight()
+                            / (int) (maxCoordinate - minCoordinate + 2 * border) - size / 2,
+                    size, size);
         }
 
         private void drawLine(Graphics g, int x1, int y1, int x2, int y2, Color color) {
@@ -70,10 +72,15 @@ public class Visualizer extends JFrame {
 
             // x*this.getWidth()/100 and this.getHeight()-y*this.getHeight()/100
             // to transform from 0-100 coordinates to screen coordinates
-            g.drawLine((x1 + (int)(-minCoordinate+border)) * this.getWidth() / (int)(maxCoordinate-minCoordinate+2*border),
-                    this.getHeight() - (y1 + (int)(-minCoordinate+border)) * this.getHeight() / (int)(maxCoordinate-minCoordinate+2*border),
-                    (x2 + (int)(-minCoordinate+border)) * this.getWidth() / (int)(maxCoordinate-minCoordinate+2*border),
-                    this.getHeight() - (y2 + (int)(-minCoordinate+border)) * this.getHeight() / (int)(maxCoordinate-minCoordinate+2*border));
+            g.drawLine(
+                    (x1 + (int) (-minCoordinate + border)) * this.getWidth()
+                            / (int) (maxCoordinate - minCoordinate + 2 * border),
+                    this.getHeight() - (y1 + (int) (-minCoordinate + border)) * this.getHeight()
+                            / (int) (maxCoordinate - minCoordinate + 2 * border),
+                    (x2 + (int) (-minCoordinate + border)) * this.getWidth()
+                            / (int) (maxCoordinate - minCoordinate + 2 * border),
+                    this.getHeight() - (y2 + (int) (-minCoordinate + border)) * this.getHeight()
+                            / (int) (maxCoordinate - minCoordinate + 2 * border));
         }
 
         @Override
@@ -84,40 +91,72 @@ public class Visualizer extends JFrame {
             for (Customer customer : customerList) {
                 drawPoint(g, customer.xCoordinate, customer.yCoordinate, Color.red, 5);
             }
+
+            // for each depot
+            for (int i = 0; i < schedule.size(); i++) {
+                // for each route in depot
+                for (int j = 0; j < schedule.get(i).size(); j++) {
+                    // for each customer in route
+                    for (int k = 0; k < schedule.get(i).get(j).geCustomers().size(); k++) {
+                        if (k == schedule.get(i).get(j).geCustomers().size() - 1) {
+                            if (k != 0) {
+                                drawLine(g, schedule.get(i).get(j).geCustomers().get(k - 1).xCoordinate,
+                                        schedule.get(i).get(j).geCustomers().get(k - 1).yCoordinate,
+                                        schedule.get(i).get(j).geCustomers().get(k).xCoordinate,
+                                        schedule.get(i).get(j).geCustomers().get(k).yCoordinate, Color.blue);
+                            }
+                            drawLine(g, schedule.get(i).get(j).geCustomers().get(k).xCoordinate,
+                                    schedule.get(i).get(j).geCustomers().get(k).yCoordinate,
+                                    depotList.get(i).xCoordinate, depotList.get(i).yCoordinate, Color.black);
+                        } else if (k == 0) {
+                            drawLine(g, schedule.get(i).get(j).geCustomers().get(k).xCoordinate,
+                                    schedule.get(i).get(j).geCustomers().get(k).yCoordinate,
+                                    depotList.get(i).xCoordinate, depotList.get(i).yCoordinate, Color.red);
+                        } else {
+                            drawLine(g, schedule.get(i).get(j).geCustomers().get(k - 1).xCoordinate,
+                                    schedule.get(i).get(j).geCustomers().get(k - 1).yCoordinate,
+                                    schedule.get(i).get(j).geCustomers().get(k).xCoordinate,
+                                    schedule.get(i).get(j).geCustomers().get(k).yCoordinate, Color.blue);
+                        }
+
+                    }
+                }
+            }
+
         }
-      //       for (int i = 0; i < this.DNAString.size(); i++){
-      //           Vehicle currentVehicle = vehicle_dict.get(i);
-      //           List<Integer> currentRoute = this.DNAString.get(i);
 
-      //           int startDepotId = currentVehicle.getDepotID();
-      //           Color currentColor = depotColours.get(startDepotId);
-      //           Depot startDepot = depot_dict.get(startDepotId);
-      //           Depot endDepot = depot_dict.get(currentRoute.get(currentRoute.size()-1));
-      //           if(currentRoute.size()>1) {
-      //               Customer nextCustomer = customer_dict.get(currentRoute.get(0));
-      //               Customer lastCustomer;
-      //               drawLine(g, startDepot.getX(), startDepot.getY(), nextCustomer.getX(), nextCustomer.getY(), currentColor);
-      //               drawPoint(g, nextCustomer.getX(), nextCustomer.getY(), currentColor, 10);
-      //               for(int j = 1; j < currentRoute.size()-2; j++){
-      //                   lastCustomer = nextCustomer;
-      //                   nextCustomer = customer_dict.get(currentRoute.get(j));
-      //                   drawLine(g, lastCustomer.getX(), lastCustomer.getY(), nextCustomer.getX(), nextCustomer.getY(), currentColor);
-      //                   drawPoint(g, nextCustomer.getX(), nextCustomer.getY(), currentColor, 10);
-      //               }
-      //               lastCustomer = nextCustomer;
-      //               drawLine(g, lastCustomer.getX(), lastCustomer.getY(), endDepot.getX(), endDepot.getY(), currentColor);
-      //           }
-      //       }
-      //   }
+        // for (int i = 0; i < this.DNAString.size(); i++){
+        // Vehicle currentVehicle = vehicle_dict.get(i);
+        // List<Integer> currentRoute = this.DNAString.get(i);
 
-        public void changeDNA(List<List<Integer>> DNAString) {
-            this.DNAString = DNAString;
+        // int startDepotId = currentVehicle.getDepotID();
+        // Color currentColor = depotColours.get(startDepotId);
+        // Depot startDepot = depot_dict.get(startDepotId);
+        // Depot endDepot = depot_dict.get(currentRoute.get(currentRoute.size()-1));
+        // if(currentRoute.size()>1) {
+        // Customer nextCustomer = customer_dict.get(currentRoute.get(0));
+        // Customer lastCustomer;
+        // drawLine(g, startDepot.getX(), startDepot.getY(), nextCustomer.getX(),
+        // nextCustomer.getY(), currentColor);
+        // drawPoint(g, nextCustomer.getX(), nextCustomer.getY(), currentColor, 10);
+        // for(int j = 1; j < currentRoute.size()-2; j++){
+        // lastCustomer = nextCustomer;
+        // nextCustomer = customer_dict.get(currentRoute.get(j));
+        // drawLine(g, lastCustomer.getX(), lastCustomer.getY(), nextCustomer.getX(),
+        // nextCustomer.getY(), currentColor);
+        // drawPoint(g, nextCustomer.getX(), nextCustomer.getY(), currentColor, 10);
+        // }
+        // lastCustomer = nextCustomer;
+        // drawLine(g, lastCustomer.getX(), lastCustomer.getY(), endDepot.getX(),
+        // endDepot.getY(), currentColor);
+        // }
+        // }
+        // }
+
+        public void changeSchedule(ArrayList<ArrayList<Route>> schedule) {
+            this.schedule = schedule;
             repaint();
         }
     }
 
-    public static void main(String[] args){
-       //Visualizer visualizer = new Visualizer();
-    }
 }
-

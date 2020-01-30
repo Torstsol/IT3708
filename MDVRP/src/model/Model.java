@@ -18,6 +18,10 @@ public class Model {
     ArrayList<ArrayList<Integer>> pseudoChromosome = new ArrayList<ArrayList<Integer>>();
     ArrayList<ArrayList<ArrayList<Integer>>> population = new ArrayList<ArrayList<ArrayList<Integer>>>();
 
+    //Generated schedules
+    ArrayList<ArrayList<ArrayList<Route>>> populationSchedules = new ArrayList<ArrayList<ArrayList<Route>>>();
+    ArrayList<ArrayList<Integer>> solution = new ArrayList<ArrayList<Integer>>();
+
     public void setVehicles(int vechicles){
         this.vehicles = vechicles;
     }
@@ -47,5 +51,13 @@ public class Model {
 
     public ArrayList<ArrayList<ArrayList<Integer>>> getPopulation(){
         return this.population;
+    }
+
+    public void addPopulationSchedules(ArrayList<ArrayList<ArrayList<Route>>> populationSchedules){
+        this.populationSchedules = populationSchedules;
+    }
+
+    public ArrayList<ArrayList<ArrayList<Route>>> getPopulationSchedules(){
+        return this.populationSchedules;
     }
 }

@@ -21,4 +21,8 @@ public class Algorithm {
         }
         return population;
     }
+
+    public double getBestFitness(){
+        return 100.0;
+    }
 }
