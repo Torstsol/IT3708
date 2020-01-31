@@ -24,4 +24,12 @@ public class Individual {
     public void addPhenotype(ArrayList<ArrayList<Route>> phenotype){
         this.phenotype = phenotype;
     }
+
+    public void addFitness(double fitness){
+        this.fitness = fitness;
+    }
+
+    public double getFitness(){
+        return this.fitness;
+    }
 }

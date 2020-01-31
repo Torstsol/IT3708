@@ -11,6 +11,7 @@ import model.Model;
 import model.Depot;
 import model.Customer;
 import model.Route;
+import model.Individual;
 
 public class IOManager{
 
@@ -35,7 +36,6 @@ public class IOManager{
         for(int i=0; i<Integer.parseInt(list[1]); i++){  
             //initialize customers
             int customerID = scan.nextInt();
-            System.out.println(customerID);
             int x = scan.nextInt();
             int y = scan.nextInt();
             model.addCustomer(new Customer(customerID, x, y, scan.nextInt(), scan.nextInt()));
@@ -97,9 +97,9 @@ public class IOManager{
         return result; 
     }
 
-    public void generateAnswerFile(ArrayList<ArrayList<Route>> answer){
+    public void generateAnswerFile(Individual individual){
 
-        double solution = 100.0;
+        double solution = individual.getFitness();
 
         File file = new File("solutions/solution.txt");
         FileWriter fr = null;
@@ -108,20 +108,20 @@ public class IOManager{
 
             fr.write(solution+"\n");
 
-            for (int i=0; i<answer.size(); i++){
+            for (int i=0; i<individual.getPhenotype().size(); i++){
                 int depot = i+1;
-                for (int j=0; j<answer.get(i).size(); j++){
+                for (int j=0; j<individual.getPhenotype().get(i).size(); j++){
                     int vehicle = j+1;
 
-                    int routeLoad = answer.get(i).get(j).getLoad();
-                    double distance = answer.get(i).get(j).getDistance();
+                    int routeLoad = individual.getPhenotype().get(i).get(j).getLoad();
+                    double distance = individual.getPhenotype().get(i).get(j).getDistance();
                     double roundOffDistance = (double) Math.round(distance * 100) / 100;
 
                     fr.write(depot+"\t"+vehicle+"\t"+roundOffDistance+"\t"+routeLoad);
 
                     fr.write("\t"+0);
 
-                    for(Customer customer: answer.get(i).get(j).geCustomers()){
+                    for(Customer customer: individual.getPhenotype().get(i).get(j).geCustomers()){
                         fr.write(" "+customer.customerID);
                     }
                     fr.write(" "+0+"\n");

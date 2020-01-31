@@ -18,9 +18,6 @@ public class Model {
     ArrayList<ArrayList<Integer>> pseudoChromosome = new ArrayList<ArrayList<Integer>>();
     ArrayList<Individual> population = new ArrayList<Individual>();
 
-    //Generated schedules
-    ArrayList<ArrayList<Integer>> solution = new ArrayList<ArrayList<Integer>>();
-
     public void setVehicles(int vechicles){
         this.vehicles = vechicles;
     }

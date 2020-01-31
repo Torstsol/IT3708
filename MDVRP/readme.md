@@ -35,6 +35,6 @@ Euclidian distance
 
 Eventuelle problemer:
 - Har ikke tatt høyde for antall kjøretøy i routescheduleren
-- Har ikke lagt til costen å dra tilbake til depotet i distance-akkumulatoren
+- Check Har ikke lagt til costen å dra tilbake til depotet i distance-akkumulatoren
 - Gi farger til rutene
 - det er noe hardkoda for duration elns i routescheduler tror jeg

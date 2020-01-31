@@ -5,6 +5,7 @@ import utils.RouteScheduler;
 import visualization.Visualizer;
 import model.Model;
 import algorithm.Algorithm;
+import model.Individual;
 
 
 public class Main {
@@ -12,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Parameters
-        int populationSize = 10;
+        int populationSize = 400;
         String fileName = "/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p01";
 
         //Initialize the customers and depots from file
@@ -35,13 +36,18 @@ public class Main {
         //Generate schedules for each individual in population
         scheduler.generatePopulationRoutes(model.getPopulation(), model);
 
-        
-        
-        //generate Answerfile from Individuals phenotype
-        manager.generateAnswerFile(model.getPopulation().get(0).getPhenotype());
+        //Evaluate fitness
+        algorithm.evaluateFitness(model.getPopulation());
 
-        //visualize a solution
-        Visualizer visualizer = new Visualizer(model.depotList, model.customerList, model.maxCoordinate, model.minCoordinate, model.getPopulation().get(0).getPhenotype());
+        //get best individual
+        Individual individual = algorithm.getBestIndividual(model.getPopulation());
+        System.out.println("Fitness of best solution: " + individual.getFitness());
+        
+        //generate Answerfile from Individual
+        manager.generateAnswerFile(individual);
+
+        //visualize the Individual-solution
+        Visualizer visualizer = new Visualizer(model.depotList, model.customerList, model.maxCoordinate, model.minCoordinate, individual.getPhenotype());
 
     }
 }
