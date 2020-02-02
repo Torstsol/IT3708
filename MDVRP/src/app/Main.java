@@ -13,8 +13,13 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Parameters
-        int populationSize = 400;
-        String fileName = "/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p01";
+        int populationSize = 10000;
+
+        //Ubuntu
+        //String fileName = "/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p01";
+
+        //Windows
+        String fileName = "Testing_Data\\Data_Files\\p01";
 
         //Initialize the customers and depots from file
         IOManager manager = new IOManager();
