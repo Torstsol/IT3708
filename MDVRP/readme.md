@@ -17,7 +17,13 @@ Check Visualisere ruter
 -XY-plot seems to be good
 
 
-Evaluere ruter
+Check Evaluere ruter
+
+Check Selection
+Check crossover
+
+inter-mutation
+intra-mutation
 
 Fikse bugs
 

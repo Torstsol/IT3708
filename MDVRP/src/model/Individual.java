@@ -32,4 +32,8 @@ public class Individual {
     public double getFitness(){
         return this.fitness;
     }
+
+    public String toString(){
+        return "fitness: " + fitness;
+    }
 }

@@ -50,16 +50,25 @@ public class RouteScheduler {
         for (int i=0; i<customers.size(); i++){
             double subDistance = 0;
             if (route.getLoad() + customers.get(i).demand <= maxLoad) {
+
+                //if not first customer, calculate inter-customer distance
                 if (route.geCustomers().size() != 0) {
                     subDistance = IOManager.euclidianDistance(
                             route.geCustomers().get(route.geCustomers().size() - 1).xCoordinate,
                             route.geCustomers().get(route.geCustomers().size() - 1).yCoordinate, customers.get(i).xCoordinate,
                             customers.get(i).yCoordinate);
                 }
+                //calculate distance from current customer to depot
                 double depotDistance = IOManager.euclidianDistance(depotX, depotY, customers.get(i).xCoordinate,
                         customers.get(i).yCoordinate);
+                
+                //If feasible with regards to distance, add the customer to the route
                 if (route.getDistance() + subDistance + depotDistance < maxDuration || maxDuration == 0) {
                     route.addDistance(subDistance);
+                    //Add the depotDistance for first customer of the depot (not covered by addFirstCustomerToDepot)
+                    if(route.geCustomers().size()==0){
+                        route.addDistance(depotDistance);
+                    }
                     route.addCustomer(customers.get(i));
                     route.addLoad(customers.get(i).demand);
                 } else {

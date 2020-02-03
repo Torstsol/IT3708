@@ -1,7 +1,6 @@
 package visualization;
 
 import java.awt.*;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -123,39 +122,6 @@ public class Visualizer extends JFrame {
                 }
             }
 
-        }
-
-        // for (int i = 0; i < this.DNAString.size(); i++){
-        // Vehicle currentVehicle = vehicle_dict.get(i);
-        // List<Integer> currentRoute = this.DNAString.get(i);
-
-        // int startDepotId = currentVehicle.getDepotID();
-        // Color currentColor = depotColours.get(startDepotId);
-        // Depot startDepot = depot_dict.get(startDepotId);
-        // Depot endDepot = depot_dict.get(currentRoute.get(currentRoute.size()-1));
-        // if(currentRoute.size()>1) {
-        // Customer nextCustomer = customer_dict.get(currentRoute.get(0));
-        // Customer lastCustomer;
-        // drawLine(g, startDepot.getX(), startDepot.getY(), nextCustomer.getX(),
-        // nextCustomer.getY(), currentColor);
-        // drawPoint(g, nextCustomer.getX(), nextCustomer.getY(), currentColor, 10);
-        // for(int j = 1; j < currentRoute.size()-2; j++){
-        // lastCustomer = nextCustomer;
-        // nextCustomer = customer_dict.get(currentRoute.get(j));
-        // drawLine(g, lastCustomer.getX(), lastCustomer.getY(), nextCustomer.getX(),
-        // nextCustomer.getY(), currentColor);
-        // drawPoint(g, nextCustomer.getX(), nextCustomer.getY(), currentColor, 10);
-        // }
-        // lastCustomer = nextCustomer;
-        // drawLine(g, lastCustomer.getX(), lastCustomer.getY(), endDepot.getX(),
-        // endDepot.getY(), currentColor);
-        // }
-        // }
-        // }
-
-        public void changeSchedule(ArrayList<ArrayList<Route>> schedule) {
-            this.schedule = schedule;
-            repaint();
         }
     }
 

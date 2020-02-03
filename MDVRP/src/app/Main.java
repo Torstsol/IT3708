@@ -4,24 +4,32 @@ import utils.IOManager;
 import utils.RouteScheduler;
 import visualization.Visualizer;
 import model.Model;
+
+import java.util.ArrayList;
+
 import algorithm.Algorithm;
 import model.Individual;
-
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        //Parameters
-        int populationSize = 10000;
+        // Parameters
+        int populationSize = 300;
+        int numberOfElites = 10;
+        int numberOfGenerations = 5000;
 
-        //Ubuntu
-        //String fileName = "/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p01";
+        // Tournament selection
+        int tournamentSize = 2;
+        double pressure = 0.7;
 
-        //Windows
-        String fileName = "Testing_Data\\Data_Files\\p01";
+        // Ubuntu
+        String fileName = "/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p08";
 
-        //Initialize the customers and depots from file
+        // Windows
+        // String fileName = "Testing_Data\\Data_Files\\p01";
+
+        // Initialize the customers and depots from file
         IOManager manager = new IOManager();
         Model model = new Model();
         Algorithm algorithm = new Algorithm();
@@ -35,24 +43,50 @@ public class Main {
         // Generate pseudochromosome
         model.addPseudoChromosome(manager.generateDepotCustomerIntegerList(model.depotList));
 
-        //seed population based on seudochromosome
+        // seed population based on pseudochromosome
         model.addPopulation(algorithm.seedPopulation(model.getPseudoChromosome(), populationSize));
 
-        //Generate schedules for each individual in population
-        scheduler.generatePopulationRoutes(model.getPopulation(), model);
+        // Main loop
+        Individual bestIndividual = new Individual();
+        int generation = 0;
+        while (generation < numberOfGenerations) {
+            // Generate schedules for each individual in population
+            scheduler.generatePopulationRoutes(model.getPopulation(), model);
 
-        //Evaluate fitness
-        algorithm.evaluateFitness(model.getPopulation());
+            // Evaluate fitness for all individuals
+            algorithm.evaluateFitness(model.getPopulation());
 
-        //get best individual
-        Individual individual = algorithm.getBestIndividual(model.getPopulation());
-        System.out.println("Fitness of best solution: " + individual.getFitness());
-        
-        //generate Answerfile from Individual
-        manager.generateAnswerFile(individual);
+            // Get the n best solutions from population
+            ArrayList<Individual> elites = algorithm.getElites(model.getPopulation(), numberOfElites);
 
-        //visualize the Individual-solution
-        Visualizer visualizer = new Visualizer(model.depotList, model.customerList, model.maxCoordinate, model.minCoordinate, individual.getPhenotype());
+            // get best individual and print generation
+            bestIndividual = elites.get(0);
+            System.out.println("Generation: " + generation + " Fitness of best solution: " + bestIndividual.getFitness());
+
+            // Initialize new population
+            ArrayList<Individual> newPopulation = new ArrayList<Individual>();
+
+            // add elites to new population
+            newPopulation.addAll(elites);
+
+            while (newPopulation.size() < populationSize){
+                // Tournament selection
+                Individual parent1 = algorithm.tournamentSelection(model.getPopulation(), pressure, tournamentSize);
+                Individual parent2 = algorithm.tournamentSelection(model.getPopulation(), pressure, tournamentSize);
+                //algorithm.crossover(model, parent1, parent2);
+                newPopulation.addAll(algorithm.crossover(model, parent1, parent2));
+            }
+            model.addPopulation(newPopulation);
+
+            generation = generation+1;
+        }
+
+        // generate Answerfile from Individual
+        manager.generateAnswerFile(bestIndividual);
+
+        // visualize the Individual-solution
+        Visualizer visualizer = new Visualizer(model.depotList, model.customerList, model.maxCoordinate,
+                model.minCoordinate, bestIndividual.getPhenotype());
 
     }
 }
