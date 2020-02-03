@@ -15,19 +15,16 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         // Parameters
-        int populationSize = 300;
+        int populationSize = 1000;
         int numberOfElites = 10;
-        int numberOfGenerations = 5000;
+        int numberOfGenerations = 1000;
 
         // Tournament selection
         int tournamentSize = 2;
-        double pressure = 0.7;
+        double pressure = 0.8;
 
-        // Ubuntu
-        String fileName = "/home/torstein/Documents/ntnu/it3708/project1/Testing_Data/Data_Files/p08";
-
-        // Windows
-        // String fileName = "Testing_Data\\Data_Files\\p01";
+        // Testing data
+        String fileName = "Testing_Data/Data_Files/p01";
 
         // Initialize the customers and depots from file
         IOManager manager = new IOManager();
@@ -61,7 +58,8 @@ public class Main {
 
             // get best individual and print generation
             bestIndividual = elites.get(0);
-            System.out.println("Generation: " + generation + " Fitness of best solution: " + bestIndividual.getFitness());
+            double avg = model.getPopulation().stream().map(Individual::getFitness).reduce(Double::sum).get() / model.getPopulation().size();
+            System.out.println("Generation: " + generation + " Fitness of best solution: " + bestIndividual.getFitness() + " Avg: fitness: " + avg);
 
             // Initialize new population
             ArrayList<Individual> newPopulation = new ArrayList<Individual>();
