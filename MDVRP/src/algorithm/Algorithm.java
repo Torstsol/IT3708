@@ -154,4 +154,20 @@ public class Algorithm {
 
         return children;
     }
+
+    // Swap mutation, performs swap on a random depot
+    public Individual swapMutation(Individual individual, Model model){
+
+        // Randomly choose depot to undergo mutation
+        int depotIndex = this.random.nextInt(model.depotList.size());
+        ArrayList<Integer> subChromosome = individual.getChromosome().get(depotIndex);
+
+        // Randomly choose which integers to swap
+        int index1 = this.random.nextInt(subChromosome.size());
+        int index2 = this.random.nextInt(subChromosome.size());
+
+        Collections.swap(subChromosome, index1, index2);
+
+        return individual;
+    }
 }

@@ -19,8 +19,9 @@ public class Main {
         // Parameters
         int populationSize = 1000;
         int numberOfElites = 10;
-        int numberOfGenerations = 1000;
+        int numberOfGenerations = 10000;
         double crossoverChance = 1.00;
+        double swapMutationChance = 0.01;
 
         // Tournament selection
         int tournamentSize = 3;
@@ -75,17 +76,24 @@ public class Main {
             newPopulation.addAll(elites);
 
             while (newPopulation.size() < populationSize){
+
+                ArrayList<Individual> pair = new ArrayList<Individual>();
+
                 // Tournament selection
-                Individual parent1 = algorithm.tournamentSelection(model.getPopulation(), pressure, tournamentSize);
-                Individual parent2 = algorithm.tournamentSelection(model.getPopulation(), pressure, tournamentSize);
+                pair.add(algorithm.tournamentSelection(model.getPopulation(), pressure, tournamentSize));
+                pair.add(algorithm.tournamentSelection(model.getPopulation(), pressure, tournamentSize));
                 
                 if(Randomizer.check(crossoverChance)){
-                    newPopulation.addAll(algorithm.crossover(model, parent1, parent2));
+                    ArrayList<Individual> children = algorithm.crossover(model, pair.get(0), pair.get(1));
+                    pair.set(0, children.get(0));
+                    pair.set(1, children.get(1));
                 }
-                else{
-                    newPopulation.add(parent1);
-                    newPopulation.add(parent2);
+                if(Randomizer.check(swapMutationChance)){
+                    algorithm.swapMutation(pair.get(0), model);
+                    algorithm.swapMutation(pair.get(1), model);
                 }
+
+                newPopulation.addAll(pair);
             }
             model.addPopulation(newPopulation);
 
