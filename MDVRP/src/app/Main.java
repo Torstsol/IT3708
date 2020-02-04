@@ -1,6 +1,7 @@
 package app;
 
 import utils.IOManager;
+import utils.Randomizer;
 import utils.RouteScheduler;
 import visualization.Visualizer;
 import model.Model;
@@ -15,16 +16,17 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         // Parameters
-        int populationSize = 1000;
+        int populationSize = 50;
         int numberOfElites = 10;
-        int numberOfGenerations = 1000;
+        int numberOfGenerations = 20000;
+        double crossoverChance = 0.8;
 
         // Tournament selection
         int tournamentSize = 2;
-        double pressure = 0.8;
+        double pressure = 0.7;
 
         // Testing data
-        String fileName = "Testing_Data/Data_Files/p01";
+        String fileName = "Testing_Data/Data_Files/p05";
 
         // Initialize the customers and depots from file
         IOManager manager = new IOManager();
@@ -59,7 +61,11 @@ public class Main {
             // get best individual and print generation
             bestIndividual = elites.get(0);
             double avg = model.getPopulation().stream().map(Individual::getFitness).reduce(Double::sum).get() / model.getPopulation().size();
-            System.out.println("Generation: " + generation + " Fitness of best solution: " + bestIndividual.getFitness() + " Avg: fitness: " + avg);
+
+            if(generation%10 == 0 || generation == numberOfGenerations-1){
+                System.out.println("Generation: " + generation + " Fitness of best solution: " + bestIndividual.getFitness() + " Avg: fitness: " + avg);
+            }
+    
 
             // Initialize new population
             ArrayList<Individual> newPopulation = new ArrayList<Individual>();
@@ -71,8 +77,14 @@ public class Main {
                 // Tournament selection
                 Individual parent1 = algorithm.tournamentSelection(model.getPopulation(), pressure, tournamentSize);
                 Individual parent2 = algorithm.tournamentSelection(model.getPopulation(), pressure, tournamentSize);
-                //algorithm.crossover(model, parent1, parent2);
-                newPopulation.addAll(algorithm.crossover(model, parent1, parent2));
+                
+                if(Randomizer.check(crossoverChance)){
+                    newPopulation.addAll(algorithm.crossover(model, parent1, parent2));
+                }
+                else{
+                    newPopulation.add(parent1);
+                    newPopulation.add(parent2);
+                }
             }
             model.addPopulation(newPopulation);
 

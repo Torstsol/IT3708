@@ -32,11 +32,6 @@ public class Visualizer extends JFrame {
         setVisible(true);
     }
 
-    public void changeSchedule(ArrayList<ArrayList<Route>> schedule) {
-        canvas.setSchedule(schedule);
-    }
-
-    // TODO Make dynamic
     private class MyCanvas extends Canvas {
 
         ArrayList<Depot> depotList;
@@ -48,10 +43,6 @@ public class Visualizer extends JFrame {
         private double border = 5;
         List<Color> depotColours = new ArrayList<Color>(Arrays.asList(Color.blue, Color.red, Color.green, Color.black,
                 Color.yellow, Color.pink, Color.cyan, Color.magenta, Color.orange, Color.lightGray));
-
-        public void setSchedule(ArrayList<ArrayList<Route>> schedule) {
-            this.schedule = schedule;
-        }
 
         private void drawPoint(Graphics g, int x, int y, Color color, int size) {
             g.setColor(color);
@@ -84,6 +75,7 @@ public class Visualizer extends JFrame {
 
         @Override
         public void paint(Graphics g) {
+            //this.setBackground(Color.DARK_GRAY);
             for (Depot depot : depotList) {
                 drawPoint(g, depot.xCoordinate, depot.yCoordinate, Color.black, 10);
             }
@@ -95,6 +87,7 @@ public class Visualizer extends JFrame {
             for (int i = 0; i < schedule.size(); i++) {
                 // for each route in depot
                 for (int j = 0; j < schedule.get(i).size(); j++) {
+                    Color routeColor = Color.getHSBColor((float)Math.random(), (float)Math.random(), 0.7f);
                     // for each customer in route
                     for (int k = 0; k < schedule.get(i).get(j).geCustomers().size(); k++) {
                         if (k == schedule.get(i).get(j).geCustomers().size() - 1) {
@@ -102,20 +95,20 @@ public class Visualizer extends JFrame {
                                 drawLine(g, schedule.get(i).get(j).geCustomers().get(k - 1).xCoordinate,
                                         schedule.get(i).get(j).geCustomers().get(k - 1).yCoordinate,
                                         schedule.get(i).get(j).geCustomers().get(k).xCoordinate,
-                                        schedule.get(i).get(j).geCustomers().get(k).yCoordinate, Color.blue);
+                                        schedule.get(i).get(j).geCustomers().get(k).yCoordinate, routeColor);
                             }
                             drawLine(g, schedule.get(i).get(j).geCustomers().get(k).xCoordinate,
                                     schedule.get(i).get(j).geCustomers().get(k).yCoordinate,
-                                    depotList.get(i).xCoordinate, depotList.get(i).yCoordinate, Color.black);
+                                    depotList.get(i).xCoordinate, depotList.get(i).yCoordinate, routeColor);
                         } else if (k == 0) {
                             drawLine(g, schedule.get(i).get(j).geCustomers().get(k).xCoordinate,
                                     schedule.get(i).get(j).geCustomers().get(k).yCoordinate,
-                                    depotList.get(i).xCoordinate, depotList.get(i).yCoordinate, Color.red);
+                                    depotList.get(i).xCoordinate, depotList.get(i).yCoordinate, routeColor);
                         } else {
                             drawLine(g, schedule.get(i).get(j).geCustomers().get(k - 1).xCoordinate,
                                     schedule.get(i).get(j).geCustomers().get(k - 1).yCoordinate,
                                     schedule.get(i).get(j).geCustomers().get(k).xCoordinate,
-                                    schedule.get(i).get(j).geCustomers().get(k).yCoordinate, Color.blue);
+                                    schedule.get(i).get(j).geCustomers().get(k).yCoordinate, routeColor);
                         }
 
                     }
