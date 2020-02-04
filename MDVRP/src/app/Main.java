@@ -17,18 +17,18 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         // Parameters
-        int populationSize = 1000;
+        int populationSize = 100;
         int numberOfElites = 10;
         int numberOfGenerations = 10000;
-        double crossoverChance = 1.00;
-        double swapMutationChance = 0.01;
+        double crossoverChance = 0.80;
+        double swapMutationChance = 0.20;
 
         // Tournament selection
-        int tournamentSize = 3;
+        int tournamentSize = 2;
         double pressure = 0.65;
 
         // Testing data
-        String fileName = "Testing_Data/Data_Files/p01";
+        String fileName = "Testing_Data/Data_Files/p02";
 
         // Initialize the customers and depots from file
         IOManager manager = new IOManager();
@@ -89,8 +89,8 @@ public class Main {
                     pair.set(1, children.get(1));
                 }
                 if(Randomizer.check(swapMutationChance)){
-                    algorithm.swapMutation(pair.get(0), model);
-                    algorithm.swapMutation(pair.get(1), model);
+                    pair.set(0, algorithm.swapMutation(pair.get(0), model));
+                    pair.set(1, algorithm.swapMutation(pair.get(1), model));
                 }
 
                 newPopulation.addAll(pair);

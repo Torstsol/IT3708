@@ -158,16 +158,22 @@ public class Algorithm {
     // Swap mutation, performs swap on a random depot
     public Individual swapMutation(Individual individual, Model model){
 
+        ArrayList<ArrayList<Integer>> chromosome = individual.cloneChromosome();
+
         // Randomly choose depot to undergo mutation
         int depotIndex = this.random.nextInt(model.depotList.size());
-        ArrayList<Integer> subChromosome = individual.getChromosome().get(depotIndex);
+        ArrayList<Integer> subChromosome = chromosome.get(depotIndex);
 
         // Randomly choose which integers to swap
         int index1 = this.random.nextInt(subChromosome.size());
         int index2 = this.random.nextInt(subChromosome.size());
 
         Collections.swap(subChromosome, index1, index2);
+        chromosome.set(depotIndex, subChromosome);
 
-        return individual;
+        Individual mutatedIndividual = new Individual();
+        mutatedIndividual.addChromosome(chromosome);
+
+        return mutatedIndividual;
     }
 }

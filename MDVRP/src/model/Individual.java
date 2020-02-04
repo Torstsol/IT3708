@@ -36,4 +36,12 @@ public class Individual {
     public String toString(){
         return "fitness: " + fitness;
     }
+
+    public ArrayList<ArrayList<Integer>> cloneChromosome(){
+        ArrayList<ArrayList<Integer>> copy = new ArrayList<>();
+        for(ArrayList<Integer> sc : this.getChromosome()){
+            copy.add(new ArrayList<>(sc));
+        }
+        return copy;
+    }
 }

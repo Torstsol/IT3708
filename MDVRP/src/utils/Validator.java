@@ -6,14 +6,33 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 public class Validator {
     private StringBuilder errors;
     private int depotNo;
     private int routeNo;
     private double epsilon = 1E-5;
+
+    public static void main(String[] args) {
+        List<Integer> l1 = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        List<Integer> l2 = Arrays.asList(9, 3, 7, 8, 2, 6, 5, 1, 4);
+        int start = 3;
+        int stop = 7;
+        ArrayList<Integer> l3 = new ArrayList<>();
+        l3.addAll(l1.subList(start, stop));
+        int index = stop - 1;
+        while (l3.size() < l1.size()) {
+            int num = l2.get(++index % l2.size());
+            if (!l3.contains(num)) {
+                l3.add(num);
+            }
+        }
+        ArrayList<Integer> l4 = new ArrayList<>();
+        l4.addAll(l3.subList(l3.size()-start, l3.size()));
+        l4.addAll(l3.subList(0, l3.size()-start));
+        System.out.println(l4);
+    }
 
     public Validator() {
     }
@@ -75,7 +94,7 @@ public class Validator {
         double actualTotalDuration = 0;
         fileScanner.nextLine();
         while (fileScanner.hasNextLine()) {
-            Scanner lineScanner = new Scanner(fileScanner.nextLine());
+            Scanner lineScanner = new Scanner(fileScanner.nextLine()).useLocale(Locale.US);
             this.depotNo = lineScanner.nextInt();
             int[] depot = depots[this.depotNo - 1];
             // keep track of routes per depot
@@ -114,7 +133,7 @@ public class Validator {
                     "Stated duration (%f) did not match actual duration (%f)",
                     statedDuration, actualDuration
             );
-            this.testRoute(actualDuration < depot[2] || depot[2] == 0 ,
+            this.testRoute(actualDuration <= depot[2] || depot[2] == 0,
                     "Duration (%f) exceeds limit for depot (%d)",
                     actualDuration, depot[2]
             );
@@ -149,6 +168,9 @@ public class Validator {
                     i + 1
             );
         }
+        if (this.errors.length() == 0) {
+            this.errors.append("No errors found - solution is valid and feasible");
+        }
         System.out.println(this.errors.toString());
     }
 
@@ -162,7 +184,7 @@ public class Validator {
 
     private void test(boolean assertion, String formatString, Object... args) {
         if (!assertion) {
-            this.errors.append(String.format(formatString, args));
+            this.errors.append(String.format(Locale.US, formatString, args));
             this.errors.append("\n");
         }
     }
