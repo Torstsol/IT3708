@@ -10,23 +10,24 @@ import java.util.ArrayList;
 
 import algorithm.Algorithm;
 import model.Individual;
+import utils.Validator;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
 
         // Parameters
-        int populationSize = 50;
+        int populationSize = 1000;
         int numberOfElites = 10;
-        int numberOfGenerations = 20000;
-        double crossoverChance = 0.8;
+        int numberOfGenerations = 1000;
+        double crossoverChance = 1.00;
 
         // Tournament selection
-        int tournamentSize = 2;
-        double pressure = 0.7;
+        int tournamentSize = 3;
+        double pressure = 0.65;
 
         // Testing data
-        String fileName = "Testing_Data/Data_Files/p05";
+        String fileName = "Testing_Data/Data_Files/p01";
 
         // Initialize the customers and depots from file
         IOManager manager = new IOManager();
@@ -97,6 +98,11 @@ public class Main {
         // visualize the Individual-solution
         Visualizer visualizer = new Visualizer(model.depotList, model.customerList, model.maxCoordinate,
                 model.minCoordinate, bestIndividual.getPhenotype());
+
+        // evaluate the solution
+        double epsilon = 1E-2;
+        Validator validator = new Validator(epsilon);
+        validator.evaluateFromFile("solutions/solution.txt", fileName);
 
     }
 }

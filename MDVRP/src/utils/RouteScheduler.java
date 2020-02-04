@@ -49,6 +49,7 @@ public class RouteScheduler {
         // phase 1
         for (int i=0; i<customers.size(); i++){
             double subDistance = 0;
+            // if feasible with regards to load
             if (route.getLoad() + customers.get(i).demand <= maxLoad) {
 
                 //if not first customer, calculate inter-customer distance
@@ -71,6 +72,14 @@ public class RouteScheduler {
                     }
                     route.addCustomer(customers.get(i));
                     route.addLoad(customers.get(i).demand);
+
+
+                    //if last customer in loop, add depotdistance
+                    if (i == customers.size()-1){
+                        route.addDistance(IOManager.euclidianDistance(depotX, depotY, customers.get(i).xCoordinate,
+                        customers.get(i).yCoordinate));
+                        continue;
+                    }
                 } else {
                     // Max duration reached
 
@@ -78,7 +87,7 @@ public class RouteScheduler {
                     depotDistance = IOManager.euclidianDistance(depotX, depotY, customers.get(i-1).xCoordinate,
                         customers.get(i-1).yCoordinate);
                     route.addDistance(depotDistance);
-                    route = addFirstCustomerToNewRoute(depot, customers.get(i));
+                    route = addFirstCustomerToNewRoute(depot, customers.get(i), i, customers.size());
                     routes.add(route);
                 }
             } else {
@@ -90,22 +99,26 @@ public class RouteScheduler {
                 route.addDistance(depotDistance);
                 
                 //create new route
-                route = addFirstCustomerToNewRoute(depot, customers.get(i));
+                route = addFirstCustomerToNewRoute(depot, customers.get(i), i, customers.size());
                 routes.add(route);
             }
-
         }
 
         return routes;
     }
 
-    public Route addFirstCustomerToNewRoute(Depot depot, Customer customer) {
+    public Route addFirstCustomerToNewRoute(Depot depot, Customer customer, int i, int customerSize) {
         int depotX = depot.xCoordinate;
         int depotY = depot.yCoordinate;
 
         Route route = new Route(depot);
+        double depotDistance = 0;
 
-        double depotDistance = IOManager.euclidianDistance(depotX, depotY, customer.xCoordinate, customer.yCoordinate);
+        if(i == customerSize -1){
+            depotDistance = IOManager.euclidianDistance(depotX, depotY, customer.xCoordinate, customer.yCoordinate);
+        }
+
+        depotDistance = depotDistance + IOManager.euclidianDistance(depotX, depotY, customer.xCoordinate, customer.yCoordinate);
         route.addCustomer(customer);
         route.addDistance(depotDistance);
         route.addLoad(customer.demand);
