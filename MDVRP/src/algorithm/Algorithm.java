@@ -123,12 +123,14 @@ public class Algorithm {
 
         // list of introduced customers
         ArrayList<Integer> newCustomerIndexes = new ArrayList<Integer>();
+
         for (Integer customerIndex : subChromosome2) {
             if (!child1SubChromosome.contains(customerIndex)) {
                 child1SubChromosome.add(customerIndex);
                 // add customers introduced to the route in a list
                 if (!subChromosome1.contains(customerIndex)) {
                     newCustomerIndexes.add(customerIndex);
+                    System.out.println("added customerindex: " + customerIndex);
                 }
             }
         }
@@ -137,7 +139,7 @@ public class Algorithm {
 
         if (newCustomerIndexes.size() != 0) {
             // Clean the chromosome for introduced customers
-            cleanChromosome(child1Chromosome, newCustomerIndexes, depotIndex);
+            child1Chromosome = cleanChromosome(child1Chromosome, newCustomerIndexes, depotIndex);
         }
 
         // Add customers that were skipped by the other parent
@@ -152,46 +154,46 @@ public class Algorithm {
         child1.addChromosome(child1Chromosome);
         children.add(child1);
 
-        // Recombination for child 2
-        ArrayList<Integer> child2SubChromosome = new ArrayList<Integer>(
-                subChromosome2.subList(Math.min(cutB1, cutB2), Math.max(cutB1, cutB2)));
+        // // Recombination for child 2
+        // ArrayList<Integer> child2SubChromosome = new ArrayList<Integer>(
+        // subChromosome2.subList(Math.min(cutB1, cutB2), Math.max(cutB1, cutB2)));
 
-        // list of introduced customers
-        ArrayList<Integer> newCustomerIndexesB = new ArrayList<Integer>();
-        for (Integer customerIndex : subChromosome1) {
-            if (!child2SubChromosome.contains(customerIndex)) {
-                child2SubChromosome.add(customerIndex);
-                // add customers introduced to the route in a list
-                if (!subChromosome2.contains(customerIndex)) {
-                    newCustomerIndexesB.add(customerIndex);
-                }
-            }
-        }
+        // // list of introduced customers
+        // ArrayList<Integer> newCustomerIndexesB = new ArrayList<Integer>();
+        // for (Integer customerIndex : subChromosome1) {
+        // if (!child2SubChromosome.contains(customerIndex)) {
+        // child2SubChromosome.add(customerIndex);
+        // // add customers introduced to the route in a list
+        // if (!subChromosome2.contains(customerIndex)) {
+        // newCustomerIndexesB.add(customerIndex);
+        // }
+        // }
+        // }
 
-        ArrayList<ArrayList<Integer>> child2Chromosome = parent2.cloneChromosome();
+        // ArrayList<ArrayList<Integer>> child2Chromosome = parent2.cloneChromosome();
 
-        if (newCustomerIndexesB.size() != 0) {
-            // Clean the chromosome for introduced customers
-            cleanChromosome(child2Chromosome, newCustomerIndexesB, depotIndex);
-        }
+        // if (newCustomerIndexesB.size() != 0) {
+        // // Clean the chromosome for introduced customers
+        // cleanChromosome(child2Chromosome, newCustomerIndexesB, depotIndex);
+        // }
 
-        // Add customers that were skipped by the other parent
-        for (Integer customerIndex : subChromosome2) {
-            if (!child2SubChromosome.contains(customerIndex)) {
-                child2SubChromosome.add(customerIndex);
-                child2Chromosome.set(depotIndex, child2SubChromosome);
-            }
-        }
-        // create new Individual from chromosome
-        Individual child2 = new Individual();
-        child2.addChromosome(child2Chromosome);
-        children.add(child2);
+        // // Add customers that were skipped by the other parent
+        // for (Integer customerIndex : subChromosome2) {
+        // if (!child2SubChromosome.contains(customerIndex)) {
+        // child2SubChromosome.add(customerIndex);
+        // child2Chromosome.set(depotIndex, child2SubChromosome);
+        // }
+        // }
+        // // create new Individual from chromosome
+        // Individual child2 = new Individual();
+        // child2.addChromosome(child2Chromosome);
+        children.add(parent2);
 
         return children;
     }
 
-    public void cleanChromosome(ArrayList<ArrayList<Integer>> chromosome, ArrayList<Integer> faultyCustomer,
-            int depotIndex) {
+    public ArrayList<ArrayList<Integer>> cleanChromosome(ArrayList<ArrayList<Integer>> chromosome,
+            ArrayList<Integer> faultyCustomer, int depotIndex) {
 
         for (int i = 0; i < chromosome.size(); i++) {
             if (i == depotIndex)
@@ -204,6 +206,8 @@ public class Algorithm {
                 }
             }
         }
+
+        return chromosome;
 
     }
 
@@ -275,6 +279,42 @@ public class Algorithm {
 
         Collections.shuffle(subChromosome.subList(Math.min(index1, index2), Math.max(index1, index2)));
         chromosome.set(depotIndex, subChromosome);
+
+        Individual mutatedIndividual = new Individual();
+        mutatedIndividual.addChromosome(chromosome);
+
+        return mutatedIndividual;
+    }
+
+    // moves a customer from a depot to another, placing it randomly in the other
+    // list
+    public Individual interDepotMutation(Individual individual, Model model) {
+
+        ArrayList<ArrayList<Integer>> chromosome = individual.cloneChromosome();
+
+        // Randomly choose depot to undergo mutation
+        int originDepot = this.random.nextInt(model.depotList.size());
+        ArrayList<Integer> subChromosome = chromosome.get(originDepot);
+
+        // Randomly choose customer to move
+        int customerIndex = this.random.nextInt(subChromosome.size());
+
+        // Record customerID
+        int customerID = subChromosome.get(customerIndex);
+
+        // remove customer from depot
+        subChromosome.remove(customerIndex);
+        System.out.println("removed in mutation: " + customerIndex);
+        chromosome.set(originDepot, subChromosome);
+
+        int destinationDepot = this.random.nextInt(model.depotList.size());
+        // To avoid adding to the same depot
+        while (destinationDepot == originDepot) {
+            destinationDepot = this.random.nextInt(model.depotList.size());
+        }
+
+        int placementIndex = this.random.nextInt(chromosome.get(destinationDepot).size());
+        chromosome.get(destinationDepot).add(placementIndex, customerID);
 
         Individual mutatedIndividual = new Individual();
         mutatedIndividual.addChromosome(chromosome);

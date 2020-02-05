@@ -24,10 +24,11 @@ public class Main {
         double swapMutationChance = 0.20;
         double insertMutationChance = 0.00;
         double scrambleMutationChance = 0.00;
+        double interDepotMutationChance = 0.00;
 
         // Tournament selection
         int tournamentSize = 2;
-        double pressure = 0.65;
+        double pressure = 0.55;
 
         // Testing data
         String fileName = "Testing_Data/Data_Files/p01";
@@ -101,6 +102,12 @@ public class Main {
                 if(Randomizer.check(scrambleMutationChance)){
                     pair.set(0, algorithm.scrambleMutation(pair.get(0), model));
                     pair.set(1, algorithm.scrambleMutation(pair.get(1), model));
+                }
+
+                if(generation%100 == 0){
+                    if(Randomizer.check(interDepotMutationChance)){
+                        pair.set(0, algorithm.interDepotMutation(pair.get(0), model));
+                    }
                 }
 
                 newPopulation.addAll(pair);
