@@ -17,14 +17,14 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         // Parameters
-        int populationSize = 100;
-        int numberOfElites = 10;
+        int populationSize = 400;
+        int numberOfElites = 40;
         int numberOfGenerations = 20000;
         double crossoverChance = 0.80;
         double swapMutationChance = 0.20;
         double insertMutationChance = 0.00;
         double scrambleMutationChance = 0.00;
-        double interDepotMutationChance = 0.00;
+        double interDepotMutationChance = 0.01;
 
         // Tournament selection
         int tournamentSize = 2;

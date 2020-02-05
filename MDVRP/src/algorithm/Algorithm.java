@@ -304,7 +304,6 @@ public class Algorithm {
 
         // remove customer from depot
         subChromosome.remove(customerIndex);
-        System.out.println("removed in mutation: " + customerIndex);
         chromosome.set(originDepot, subChromosome);
 
         int destinationDepot = this.random.nextInt(model.depotList.size());
