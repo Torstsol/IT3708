@@ -21,9 +21,9 @@ public class Main {
         int numberOfElites = 10;
         int numberOfGenerations = 20000;
         double crossoverChance = 0.80;
-        double swapMutationChance = 0.10;
-        double insertMutationChance = 0.10;
-        double scrambleMutationChance = 0.10;
+        double swapMutationChance = 0.20;
+        double insertMutationChance = 0.00;
+        double scrambleMutationChance = 0.00;
 
         // Tournament selection
         int tournamentSize = 2;

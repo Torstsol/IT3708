@@ -13,13 +13,13 @@ public class Algorithm {
 
     private Random random = new Random();
 
-    public ArrayList<Individual> seedPopulation(ArrayList<ArrayList<Integer>> pseudoChromosome, int populationSize){
+    public ArrayList<Individual> seedPopulation(ArrayList<ArrayList<Integer>> pseudoChromosome, int populationSize) {
 
         ArrayList<Individual> population = new ArrayList<Individual>();
 
-        for(int i = 0; i < populationSize; i++){
+        for (int i = 0; i < populationSize; i++) {
             ArrayList<ArrayList<Integer>> chromosome = new ArrayList<ArrayList<Integer>>();
-            for (ArrayList<Integer> subPseudoChromosome: pseudoChromosome){
+            for (ArrayList<Integer> subPseudoChromosome : pseudoChromosome) {
                 // copy the array to avoid reference bug
                 ArrayList<Integer> copy = new ArrayList<Integer>(subPseudoChromosome);
                 Collections.shuffle(copy);
@@ -32,12 +32,12 @@ public class Algorithm {
         return population;
     }
 
-    public void evaluateFitness(ArrayList<Individual> population){
-        
-        for(Individual individual: population){
+    public void evaluateFitness(ArrayList<Individual> population) {
+
+        for (Individual individual : population) {
             double totalEuclidianDistance = 0;
-            for(ArrayList<Route> phenotype: individual.getPhenotype()){
-                for(Route route: phenotype){
+            for (ArrayList<Route> phenotype : individual.getPhenotype()) {
+                for (Route route : phenotype) {
                     totalEuclidianDistance = totalEuclidianDistance + route.getDistance();
                 }
             }
@@ -46,12 +46,12 @@ public class Algorithm {
 
     }
 
-    public Individual getBestIndividual(ArrayList<Individual> population){
+    public Individual getBestIndividual(ArrayList<Individual> population) {
         int index = 0;
         double currentBestFitness = population.get(0).getFitness();
 
-        for (int i=1; i<population.size(); i++){
-            if(population.get(i).getFitness() < currentBestFitness){
+        for (int i = 1; i < population.size(); i++) {
+            if (population.get(i).getFitness() < currentBestFitness) {
                 index = i;
                 currentBestFitness = population.get(i).getFitness();
             }
@@ -59,104 +59,156 @@ public class Algorithm {
         return population.get(index);
     }
 
-    public ArrayList<Individual> getElites(ArrayList<Individual> population, int number){
+    public ArrayList<Individual> getElites(ArrayList<Individual> population, int number) {
 
-        //Sort the population based on fitness value
-        Collections.sort(population, Comparator.comparingDouble(Individual ::getFitness));
+        // Sort the population based on fitness value
+        Collections.sort(population, Comparator.comparingDouble(Individual::getFitness));
 
         return new ArrayList<Individual>(population.subList(0, number));
     }
 
-    public Individual tournamentSelection(ArrayList<Individual> population, double pressure, int tournamentSize){
+    public Individual tournamentSelection(ArrayList<Individual> population, double pressure, int tournamentSize) {
 
         ArrayList<Individual> candidates = new ArrayList<Individual>();
         ArrayList<Double> pValues = new ArrayList<Double>();
 
-        //Randomly select tournamentSize number of candidates from the population
-        for (int i=0; i<tournamentSize; i++){
+        // Randomly select tournamentSize number of candidates from the population
+        for (int i = 0; i < tournamentSize; i++) {
             candidates.add(population.get(this.random.nextInt(population.size())));
-            //Compute pvalues for the later selection NB: the candidate-list is not ordered
-            pValues.add(pressure*Math.pow(1-pressure, i));
+            // Compute pvalues for the later selection NB: the candidate-list is not ordered
+            pValues.add(pressure * Math.pow(1 - pressure, i));
         }
-        Collections.sort(candidates, Comparator.comparingDouble(Individual ::getFitness));
+        Collections.sort(candidates, Comparator.comparingDouble(Individual::getFitness));
 
-        //Generate a random number between 0-1
+        // Generate a random number between 0-1
         double selection = Math.random();
 
-        //iterate through the p-values list, and if the selection variable is smaller, return the given candidate
-        for (int j=0; j<candidates.size(); j++){
-            if (selection < pValues.get(j)){
+        // iterate through the p-values list, and if the selection variable is smaller,
+        // return the given candidate
+        for (int j = 0; j < candidates.size(); j++) {
+            if (selection < pValues.get(j)) {
                 return candidates.get(j);
             }
         }
-        //If none of the cancidates are returned, return the last candidate (Because there is a theoretical chance the above loop wont trigger, since the p-values doesnt sum to exaclty 1)
-        return candidates.get(candidates.size()-1);
+        // If none of the cancidates are returned, return the last candidate (Because
+        // there is a theoretical chance the above loop wont trigger, since the p-values
+        // doesnt sum to exaclty 1)
+        return candidates.get(candidates.size() - 1);
     }
 
     // Order 1 crossover
-    public ArrayList<Individual> crossover(Model model, Individual parent1, Individual parent2){
+    public ArrayList<Individual> crossover(Model model, Individual parent1, Individual parent2) {
 
         ArrayList<Individual> children = new ArrayList<Individual>();
 
         // Randomly choose depot to undergo reproduction
         int depotIndex = this.random.nextInt(model.depotList.size());
 
-        // Get the Integer-representation of the routes for selected depot, for each parent
+        // Get the Integer-representation of the routes for selected depot, for each
+        // parent
         ArrayList<Integer> subChromosome1 = parent1.getChromosome().get(depotIndex);
         ArrayList<Integer> subChromosome2 = parent2.getChromosome().get(depotIndex);
 
-        // get indexes for cutting of chromosomes
-        int cutIndex1 = this.random.nextInt(subChromosome1.size());
-        int cutIndex2 = this.random.nextInt(subChromosome1.size());
-        
+        // get indexes for cutting of A
+        int cutA1 = this.random.nextInt(subChromosome1.size());
+        int cutA2 = this.random.nextInt(subChromosome1.size());
 
-        //Recombination for child 1
-        ArrayList<Integer> child1SubChromosome = new ArrayList<Integer>(subChromosome1.subList(Math.min(cutIndex1, cutIndex2), Math.max(cutIndex1, cutIndex2)));
+        // get indexes for cutting of B
+        int cutB1 = this.random.nextInt(subChromosome1.size());
+        int cutB2 = this.random.nextInt(subChromosome1.size());
 
-        for(Integer customerIndex: subChromosome2){
-            if (!child1SubChromosome.contains(customerIndex)){
+        // Recombination for child 1
+        ArrayList<Integer> child1SubChromosome = new ArrayList<Integer>(
+                subChromosome1.subList(Math.min(cutA1, cutA2), Math.max(cutA1, cutA2)));
+
+        // list of introduced customers
+        ArrayList<Integer> newCustomerIndexes = new ArrayList<Integer>();
+        for (Integer customerIndex : subChromosome2) {
+            if (!child1SubChromosome.contains(customerIndex)) {
                 child1SubChromosome.add(customerIndex);
+                // add customers introduced to the route in a list
+                if (!subChromosome1.contains(customerIndex)) {
+                    newCustomerIndexes.add(customerIndex);
+                }
             }
         }
 
-        ArrayList<ArrayList<Integer>> child1Chromosome = new ArrayList<ArrayList<Integer>>(parent1.getChromosome());
-        child1Chromosome.set(depotIndex, child1SubChromosome);
-        
+        ArrayList<ArrayList<Integer>> child1Chromosome = parent1.cloneChromosome();
+
+        if (newCustomerIndexes.size() != 0) {
+            // Clean the chromosome for introduced customers
+            cleanChromosome(child1Chromosome, newCustomerIndexes, depotIndex);
+        }
+
+        // Add customers that were skipped by the other parent
+        for (Integer customerIndex : subChromosome1) {
+            if (!child1SubChromosome.contains(customerIndex)) {
+                child1SubChromosome.add(customerIndex);
+                child1Chromosome.set(depotIndex, child1SubChromosome);
+            }
+        }
         // create new Individual from chromosome
         Individual child1 = new Individual();
         child1.addChromosome(child1Chromosome);
         children.add(child1);
 
-        //Recombination for child 2
-        ArrayList<Integer> child2SubChromosome = new ArrayList<Integer>(subChromosome2.subList(Math.min(cutIndex1, cutIndex2), Math.max(cutIndex1, cutIndex2)));
+        // Recombination for child 2
+        ArrayList<Integer> child2SubChromosome = new ArrayList<Integer>(
+                subChromosome2.subList(Math.min(cutB1, cutB2), Math.max(cutB1, cutB2)));
 
-        for(Integer customerIndex: subChromosome1){
-            if (!child2SubChromosome.contains(customerIndex)){
+        // list of introduced customers
+        ArrayList<Integer> newCustomerIndexesB = new ArrayList<Integer>();
+        for (Integer customerIndex : subChromosome1) {
+            if (!child2SubChromosome.contains(customerIndex)) {
                 child2SubChromosome.add(customerIndex);
+                // add customers introduced to the route in a list
+                if (!subChromosome2.contains(customerIndex)) {
+                    newCustomerIndexesB.add(customerIndex);
+                }
             }
         }
 
-        ArrayList<ArrayList<Integer>> child2Chromosome = new ArrayList<ArrayList<Integer>>(parent2.getChromosome());
-        child2Chromosome.set(depotIndex, child2SubChromosome);
+        ArrayList<ArrayList<Integer>> child2Chromosome = parent2.cloneChromosome();
 
+        if (newCustomerIndexesB.size() != 0) {
+            // Clean the chromosome for introduced customers
+            cleanChromosome(child2Chromosome, newCustomerIndexesB, depotIndex);
+        }
+
+        // Add customers that were skipped by the other parent
+        for (Integer customerIndex : subChromosome2) {
+            if (!child2SubChromosome.contains(customerIndex)) {
+                child2SubChromosome.add(customerIndex);
+                child2Chromosome.set(depotIndex, child2SubChromosome);
+            }
+        }
         // create new Individual from chromosome
         Individual child2 = new Individual();
         child2.addChromosome(child2Chromosome);
         children.add(child2);
 
-        // System.out.println("customers parent 1: " +routeListParent1);
-        // System.out.println("customers parent 2: " +routeListParent2);
-        // System.out.println("Cutting indexes: " + cutIndex1 + ":" + cutIndex2);
-
-        // System.out.println("child 1: " + child1);
-        // System.out.println("child 2: " +child2);
-
-
         return children;
     }
 
+    public void cleanChromosome(ArrayList<ArrayList<Integer>> chromosome, ArrayList<Integer> faultyCustomer,
+            int depotIndex) {
+
+        for (int i = 0; i < chromosome.size(); i++) {
+            if (i == depotIndex)
+                continue;
+            for (int j = 0; j < chromosome.get(i).size(); j++) {
+                for (int k = 0; k < faultyCustomer.size(); k++) {
+                    if (chromosome.get(i).get(j) == faultyCustomer.get(k)) {
+                        chromosome.get(i).remove(j);
+                    }
+                }
+            }
+        }
+
+    }
+
     // Swap mutation, performs swap on a random depot
-    public Individual swapMutation(Individual individual, Model model){
+    public Individual swapMutation(Individual individual, Model model) {
 
         ArrayList<ArrayList<Integer>> chromosome = individual.cloneChromosome();
 
@@ -178,7 +230,7 @@ public class Algorithm {
     }
 
     // insert mutation
-    public Individual insertMutation(Individual individual, Model model){
+    public Individual insertMutation(Individual individual, Model model) {
 
         ArrayList<ArrayList<Integer>> chromosome = individual.cloneChromosome();
 
@@ -186,20 +238,19 @@ public class Algorithm {
         int depotIndex = this.random.nextInt(model.depotList.size());
         ArrayList<Integer> subChromosome = chromosome.get(depotIndex);
 
-        //index to move
+        // index to move
         int index2 = this.random.nextInt(subChromosome.size());
 
         int element = subChromosome.get(index2);
         subChromosome.remove(index2);
 
-        //Index to mark
+        // Index to mark
         int index1 = this.random.nextInt(subChromosome.size());
 
-        if(index1 == subChromosome.size()-1){
+        if (index1 == subChromosome.size() - 1) {
             subChromosome.add(0, element);
-        }
-        else {
-            subChromosome.add(index1+1, element);
+        } else {
+            subChromosome.add(index1 + 1, element);
         }
         chromosome.set(depotIndex, subChromosome);
 
@@ -210,7 +261,7 @@ public class Algorithm {
     }
 
     // Scramble mutation, performs scramble on a slice of subchromosome
-    public Individual scrambleMutation(Individual individual, Model model){
+    public Individual scrambleMutation(Individual individual, Model model) {
 
         ArrayList<ArrayList<Integer>> chromosome = individual.cloneChromosome();
 
@@ -231,5 +282,4 @@ public class Algorithm {
         return mutatedIndividual;
     }
 
-    
 }
