@@ -37,6 +37,15 @@ public class Route {
         return this.distance;
     }
 
+    public void addCustomerList(ArrayList<Customer> customers){
+        this.customers = customers;
+        this.load = customers.stream().map(Customer::getDemand).reduce(Integer::sum).get();
+    }
+
+    public ArrayList<Customer> copyCustomers(){
+        return new ArrayList<Customer>(this.customers);
+    }
+
 
 
 }

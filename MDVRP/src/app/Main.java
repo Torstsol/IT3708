@@ -19,16 +19,18 @@ public class Main {
         // Parameters
         int populationSize = 100;
         int numberOfElites = 10;
-        int numberOfGenerations = 10000;
+        int numberOfGenerations = 20000;
         double crossoverChance = 0.80;
-        double swapMutationChance = 0.20;
+        double swapMutationChance = 0.10;
+        double insertMutationChance = 0.10;
+        double scrambleMutationChance = 0.10;
 
         // Tournament selection
         int tournamentSize = 2;
         double pressure = 0.65;
 
         // Testing data
-        String fileName = "Testing_Data/Data_Files/p02";
+        String fileName = "Testing_Data/Data_Files/p01";
 
         // Initialize the customers and depots from file
         IOManager manager = new IOManager();
@@ -91,6 +93,14 @@ public class Main {
                 if(Randomizer.check(swapMutationChance)){
                     pair.set(0, algorithm.swapMutation(pair.get(0), model));
                     pair.set(1, algorithm.swapMutation(pair.get(1), model));
+                }
+                if(Randomizer.check(insertMutationChance)){
+                    pair.set(0, algorithm.insertMutation(pair.get(0), model));
+                    pair.set(1, algorithm.insertMutation(pair.get(1), model));
+                }
+                if(Randomizer.check(scrambleMutationChance)){
+                    pair.set(0, algorithm.scrambleMutation(pair.get(0), model));
+                    pair.set(1, algorithm.scrambleMutation(pair.get(1), model));
                 }
 
                 newPopulation.addAll(pair);

@@ -19,4 +19,7 @@ public class Customer{
     public String toString(){
         return "customerID: " + this.customerID; // + " Position: " + this.xCoordinate + "." + this.yCoordinate;
     }
+    public int getDemand(){
+        return this.demand;
+    }
 }
