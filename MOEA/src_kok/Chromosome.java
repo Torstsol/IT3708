@@ -193,7 +193,7 @@ public class Chromosome {
 
     private void initPrimMST(ImageMat img) {
         for (int i = 0; i < chromosome.length; i++) chromosome[i] = i;
-        HashSet<Integer> visited = new HashSet<>(img.getWidth() * img.getWidth());
+        HashSet<Integer> visited = new HashSet<>(img.getWidth() * img.getHeight());
         // Edges sorted after color distance in priorityQueue
         PriorityQueue<Edge> priorityQueue = new PriorityQueue<>();
         PriorityQueue<Edge> edgesQueue = new PriorityQueue<>(Collections.reverseOrder());
