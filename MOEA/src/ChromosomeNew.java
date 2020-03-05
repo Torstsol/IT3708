@@ -14,6 +14,7 @@ public class ChromosomeNew {
     ImageMatrix imageMatrix;
     public int[] segmentDivision;
     double deviation;
+    double overallConnectivity;
     List<List<Integer>> segmentMatrix;
 
     public ChromosomeNew(ImageMatrix imageMatrix, int segments) {
@@ -23,6 +24,7 @@ public class ChromosomeNew {
         initPrimMST();
         this.segmentMatrix = findSegments();
         this.deviation = overallDeviation();
+        this.overallConnectivity = overallConnectivity();
     }
 
     public List<List<Integer>> findSegments() {
