@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.io.FileReader;
 
 public class Edge implements Comparable<Edge>{
     private int from;
@@ -27,14 +26,12 @@ public class Edge implements Comparable<Edge>{
         return Math.sqrt((Math.pow(deltaRed, 2)) + (Math.pow(deltaGreen, 2)) + (Math.pow(deltaBlue, 2)));
     }
 
-    //Used when calculating overall deviation since one is a Color object
     public static double distColor(Pixel FromPixel, Color centroidColor) {
         double deltaRed = FromPixel.getRed() - centroidColor.getRed();
         double deltaGreen = FromPixel.getGreen() - centroidColor.getGreen();
         double deltaBlue = FromPixel.getBlue() - centroidColor.getBlue();
         return Math.sqrt((Math.pow(deltaRed, 2)) + (Math.pow(deltaGreen, 2)) + (Math.pow(deltaBlue, 2)));
     }
-
 
     public int getFrom() {
         return from;

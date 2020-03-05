@@ -6,34 +6,20 @@ public class EdgeNew implements Comparable<EdgeNew>{
 
     private double distance;
 
-    public EdgeNew(Pixel from, Pixel to) {
-        this.from = from.getPixelIdx();
-        this.to = to.getPixelIdx();
-        this.distance = dist(from, to);
-    }
-
     // used to save some calculations when not needing the distance
     public EdgeNew(int from, int to){
         this.from = from;
         this.to = to;
+        this.distance = dist(from, to);
     }
 
     //Calculates the Euclidean distance by using RGB
-    public static double dist(Pixel FromPixel, Pixel toPixel) {
-        double deltaRed = FromPixel.getRed() - toPixel.getRed();
-        double deltaGreen = FromPixel.getGreen() - toPixel.getGreen();
-        double deltaBlue = FromPixel.getBlue() - toPixel.getBlue();
+    public static double dist(int fromPixel, int toPixel) {
+        double deltaRed = ((fromPixel & 0xff0000) >> 16) - ((toPixel & 0xff0000) >> 16);
+        double deltaGreen = ((fromPixel & 0xff00) >> 8) - ((toPixel & 0xff00) >> 8);
+        double deltaBlue = (fromPixel & 0xff) - (toPixel & 0xff);
         return Math.sqrt((Math.pow(deltaRed, 2)) + (Math.pow(deltaGreen, 2)) + (Math.pow(deltaBlue, 2)));
     }
-
-    //Used when calculating overall deviation since one is a Color object
-    public static double distColor(Pixel FromPixel, Color centroidColor) {
-        double deltaRed = FromPixel.getRed() - centroidColor.getRed();
-        double deltaGreen = FromPixel.getGreen() - centroidColor.getGreen();
-        double deltaBlue = FromPixel.getBlue() - centroidColor.getBlue();
-        return Math.sqrt((Math.pow(deltaRed, 2)) + (Math.pow(deltaGreen, 2)) + (Math.pow(deltaBlue, 2)));
-    }
-
 
     public int getFrom() {
         return from;

@@ -29,4 +29,10 @@ Arbeidsoppgaver:
 - Lag graf
 - Lag minimale spenntrær
 
+Spørsmål:
+- Bra å kjøre med lav eller høy euclidisk distanse?
+- Hva er pri-scoren, og hvordan setter man opp evaluatoren til det?
+
+
+
 

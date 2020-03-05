@@ -34,7 +34,7 @@ public class NSGA {
             final int index = i+1;
             System.out.println("Progress: "+index+"/"+this.populationSize*2);
             executorService.execute(() -> {
-                ChromosomeNew temp = new ChromosomeNew(imageMatrix, ThreadLocalRandom.current().nextInt(100, 1000));
+                ChromosomeNew temp = new ChromosomeNew(imageMatrix, ThreadLocalRandom.current().nextInt(5, 30));
                 //temp.mergeAllSmallerThanN(this.runMinSegmentSize, 0);
                 populationInProgress.add(temp);
             });

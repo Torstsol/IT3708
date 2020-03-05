@@ -90,7 +90,7 @@ public class NSGAII {
             final int index = i;
             executorService.execute(() -> {
                 System.out.println("Created individual numbered: " + index);
-                Chromosome temp = new Chromosome(ThreadLocalRandom.current().nextInt(100, 1000));
+                Chromosome temp = new Chromosome(ThreadLocalRandom.current().nextInt(5, 30));
                 //temp.mergeAllSmallerThanN(this.runMinSegmentSize, 0);
                 populationInProgress.add(temp);
             });
