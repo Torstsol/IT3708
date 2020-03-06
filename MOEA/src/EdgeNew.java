@@ -1,5 +1,3 @@
-import java.awt.*;
-
 public class EdgeNew implements Comparable<EdgeNew>{
     private int from;
     private int to;

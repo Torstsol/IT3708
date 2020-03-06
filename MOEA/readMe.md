@@ -33,6 +33,11 @@ Spørsmål:
 - Bra å kjøre med lav eller høy euclidisk distanse?
 - Hva er pri-scoren, og hvordan setter man opp evaluatoren til det?
 
-
+Problemer:
+- Samme deviation på omtrent alle?
+- IS-edge gir doble borders ://
+- Connectivity regner mye dobbelt!
+- Deviation regner mye dobbelt!
+- Optimaliser bildelagring
 
 

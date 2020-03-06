@@ -84,6 +84,16 @@ public class ImageMat {
 
                 }
             }
+            // make a border around the image
+            for(int j=0; j<this.width; j++){
+                image.setRGB(j, 0, Color.black.getRGB());
+                image.setRGB(j, this.height-1, Color.black.getRGB());
+            }
+            // make a border around the image
+            for(int i=0; i<this.height; i++){
+                image.setRGB(0, i, Color.black.getRGB());
+                image.setRGB(this.width-1, i, Color.black.getRGB());
+            }
             ImageIO.write(image, "jpg", output);
         } catch (Exception e) {
             System.out.println(e);

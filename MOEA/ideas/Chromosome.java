@@ -12,6 +12,7 @@ public class Chromosome {
     public double deviation;
     public double connectivity;
     private double crowding_distance;
+    
     private boolean useDeviation = true; //0
     private boolean useConnectivity = true; //1
     private int rank;
@@ -379,29 +380,10 @@ public class Chromosome {
         Pixel[][] imageMat = img.getPixels();
         if (currentPixel.getColIdx() > 0) {
             neighbours.add(imageMat[currentPixel.getRowIdx()][currentPixel.getColIdx() - 1].getPixelIdx());
-            if (currentPixel.getRowIdx() > 0) {
-                neighbours.add(imageMat[currentPixel.getRowIdx() - 1][currentPixel.getColIdx() - 1].getPixelIdx());
-            }
-            if (currentPixel.getRowIdx() + 1 < imageMat.length) {
-                neighbours.add(imageMat[currentPixel.getRowIdx() + 1][currentPixel.getColIdx() - 1].getPixelIdx());
-            }
-        }
-        //add right neighbours
-        if (currentPixel.getColIdx() + 1 < imageMat[0].length) {
-            neighbours.add(imageMat[currentPixel.getRowIdx()][currentPixel.getColIdx() + 1].getPixelIdx());
-            if (currentPixel.getRowIdx() > 0) {
-                neighbours.add(imageMat[currentPixel.getRowIdx() - 1][currentPixel.getColIdx() + 1].getPixelIdx());
-            }
-            if (currentPixel.getRowIdx() + 1 < imageMat.length) {
-                neighbours.add(imageMat[currentPixel.getRowIdx() + 1][currentPixel.getColIdx() + 1].getPixelIdx());
-            }
         }
         //add up and down
         if (currentPixel.getRowIdx() > 0) {
             neighbours.add(imageMat[currentPixel.getRowIdx() - 1][currentPixel.getColIdx()].getPixelIdx());
-        }
-        if (currentPixel.getRowIdx() + 1 < imageMat.length) {
-            neighbours.add(imageMat[currentPixel.getRowIdx() + 1][currentPixel.getColIdx()].getPixelIdx());
         }
         return neighbours;
     }

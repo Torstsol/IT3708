@@ -10,10 +10,10 @@ public class NSGAII {
     private int populationNumber = 50;
     private int childPopulationNumber = 50;
     private double mutationRate = 0.005;
-    private int maxGenerationNumber = 10;
+    private int maxGenerationNumber = 20;
     private int minSegmentSize = 400;
     private int runMinSegmentSize = 30;
-    private boolean toPlotOrNotToPlot = true;
+    private boolean toPlotOrNotToPlot = false;
     private List<Chromosome> population = new ArrayList<>();
     private ArrayList<ArrayList<Chromosome>> rankedPopulation = new ArrayList<>();
 
