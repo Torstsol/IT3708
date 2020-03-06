@@ -16,7 +16,7 @@ public class NSGA {
      String imageString = "Training/86016/Test image.jpg";
      int populationSize = 25;
      int generationNumber = 100;
-     double mutationRate = 0.2;
+     double mutationRate = 0.005;
      private int minSegmentSize = 400;
      private List<ChromosomeNew> population = new ArrayList<>();
      private ArrayList<ArrayList<ChromosomeNew>> rankedPopulation = new ArrayList<>();
@@ -72,7 +72,7 @@ public class NSGA {
                         "Deviation" + contestant.getDeviation() + "Connectivity" + contestant.getConnectivity(), contestant);
                 imageMatrix.saveAsGreen("Evaluator/Student_Segmentation_Files_Green/testimage" + index +
                         "Deviation" + contestant.getDeviation() + "Connectivity" + contestant.getConnectivity(), contestant);
-                contestant.findSegments();
+                //contestant.findSegments();
                 contestant.deviation = contestant.overallDeviation();
                 contestant.overallConnectivity = contestant.overallConnectivity();
                 System.out.println("Finished writing number: " + index);
@@ -104,11 +104,6 @@ public class NSGA {
         executorService.shutdown();
         while (!executorService.isTerminated()) ;
         this.population.addAll(populationInProgress);
-
-        //Testing
-        for(ChromosomeNew chromosome: this.population){
-            imageMatrix.saveAsBlackAndWhite("imagesNew/"+chromosome.hashCode(), chromosome);
-        }
     } 
 
     private void rankPopulation() {

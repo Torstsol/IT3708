@@ -86,11 +86,11 @@ public class ImageMatrix {
             // make a border around the image
             for (int j = 0; j < this.getColLength(); j++) {
                 image.setRGB(j, 0, Color.green.getRGB());
-                image.setRGB(j, this.getRowLength() - 1, Color.black.getRGB());
+                image.setRGB(j, this.getRowLength() - 1, Color.green.getRGB());
             }
             for (int i = 0; i < this.getRowLength(); i++) {
                 image.setRGB(0, i, Color.green.getRGB());
-                image.setRGB(this.getColLength() - 1, i, Color.black.getRGB());
+                image.setRGB(this.getColLength() - 1, i, Color.green.getRGB());
             }
             ImageIO.write(image, "jpg", output);
         } catch (Exception e) {
